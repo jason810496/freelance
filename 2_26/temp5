@@ -1,0 +1,98 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define LL unsigned long long
+#define arr vector<unsigned long long>
+#define all(x) x.begin(),x.end()
+
+vector<LL> stk;
+
+inline int cnt(LL n){
+	int r=0;
+	while(n){
+		r+=(n&1);
+		n>>=1;
+	}
+	return r;
+}
+
+void Push(){
+	stk.push(0);
+	cout<<"0\n";
+}
+
+void Dup(){
+	auto t = stk.top();
+	stk.push(t);
+	cout<<cnt(t)<<"\n";
+}
+
+void Union(){
+	auto A= stk.top() ; stk.pop();
+	auto B = stk.top() ; stk.pop();
+	
+	LL c = (A|B);
+	
+	stk.push(C);
+	cout<<cnt(C)<<"\n";
+}
+
+void Intersect(){
+
+	auto A= stk.top() ; stk.pop();
+	auto B = stk.top() ; stk.pop();
+	
+	LL C = (A&B);
+
+	stk.push(C);
+	cout<<cnt(C)<<"\n";
+}
+
+void Add(){
+	auto A= stk.top() ; stk.pop();
+	auto B= stk.top() ; stk.pop();
+	
+	LL C;
+	
+	if(!A){ // A = null
+		B|=1;
+	}
+	else{
+		A<<=1;
+		B=(A|B);
+	}
+	
+	cout<<cnt(B)<<"\n";
+}
+
+signed main(){
+	//cin.tie(0);ios_base::sync_with_stdio(0);
+	
+	int n ; 
+	
+	cin>>n;
+	string oper;
+	
+	while(n--){
+		cin>>oper;
+		if(oper=="PUSH"){
+			Push();
+		}
+		else if(oper=="DUP"){
+			Dup();
+		}
+		else if(oper=="UNION"){
+			Union();
+		
+		}
+		else if(oper=="INTERSECT"){
+			Intersect();
+		}
+		else if(oper=="ADD"){
+			Add();
+		}
+		
+	}
+	
+	
+	return 0;
+}
