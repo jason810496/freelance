@@ -41,7 +41,7 @@ xy_plot2 = gcurve( graph=xy_graph2  , color=color.red)
 # while ball.pos.y > size or ball_vpy.pos.y > size or ball_newton.pos.y > size:    #模擬直到球落地 即y=球半徑
 flag = True
 
-while t<3:
+while ball.pos.y > 0 or ball_vpy.pos.y > 0 or ball_newton.pos.y > 0:
     rate(1/dt)    #每一秒跑 1000 次
     t = t + dt    #計時器
     
@@ -50,8 +50,8 @@ while t<3:
     ball.a = Fg/m 
     ball_vpy.a = Fg/m + AirRes/m
 
-    ball.v = ball.v + ball.a*dt          #球的末速度 = 前一刻速度 + 加速度*時間間隔
-    ball.pos = ball.pos + ball.v * dt    #球的末位置 = 前一刻位置 + 速度*時間間隔
+    ball.v = ball.v + ball.a*dt          
+    ball.pos = ball.pos + ball.v * dt   
 
     ball_vpy.v = ball_vpy.v + ball_vpy.a*dt          
     ball_vpy.pos = ball_vpy.pos + ball_vpy.v * dt 
@@ -66,13 +66,13 @@ while t<3:
     xy_plot2.plot(pos=(ball_newton.pos.x,ball_newton.pos.y))
 
     # stop the ball 
-    if ball.pos.y <= size:
+    if ball.pos.y <= 0:
         ball.v=vector(0,0,0)
 
-    if ball_vpy.pos.y <= size:
+    if ball_vpy.pos.y <= 0:
         ball_vpy.v=vector(0,0,0)
 
-    if ball_newton.pos.y <= size:
+    if ball_newton.pos.y <= 0:
         flag =False
 
 print (t, ball.v)
