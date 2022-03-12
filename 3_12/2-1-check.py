@@ -13,15 +13,15 @@ floor = box(length=20, height=0.01, width=10, color=color.green)  	#畫地板
 
 
 ball = sphere(radius = size, color=color.yellow, make_trail= True, trail_type="points", interval=100) 	#畫球
-ball.pos = vector(0, size+1, 0)  
+ball.pos = vector(0, size, 0)  
 ball.v = vector(3, 10, 0)           
 
 ball_vpy = sphere(radius = size, color=color.green, make_trail= True, trail_type="points", interval=100) 	#畫球
-ball_vpy.pos = vector(0, size+1, 0)
+ball_vpy.pos = vector(0, size, 0)
 ball_vpy.v = vector(3, 10, 0)
 
 ball_newton = sphere(radius = size, color=color.red, make_trail= True, trail_type="points", interval=100) 	#畫球
-ball_newton.pos = vector(0, size+1, 0)
+ball_newton.pos = vector(0, size, 0)
 ball_newton.v = vector(3, 10, 0)
 
 dt = 0.001	#時間間隔 0.001 秒
@@ -41,62 +41,37 @@ xy_plot2 = gcurve( graph=xy_graph2  , color=color.red)
 # while ball.pos.y > size or ball_vpy.pos.y > size or ball_newton.pos.y > size:    #模擬直到球落地 即y=球半徑
 flag = True
 
-while ball.pos.y > 0 or ball_vpy.pos.y > 0 or ball_newton.pos.y > 0:
+while ball.pos.y > 0 or ball_newton.pos.y > 0:
     rate(1/dt)    #每一秒跑 1000 次
     t = t + dt    #計時器
     
-    AirRes = -ball_vpy.v*damp
-    
     ball.a = Fg/m 
-    ball_vpy.a = Fg/m + AirRes/m
 
     ball.v = ball.v + ball.a*dt          
     ball.pos = ball.pos + ball.v * dt   
-
-    ball_vpy.v = ball_vpy.v + ball_vpy.a*dt          
-    ball_vpy.pos = ball_vpy.pos + ball_vpy.v * dt 
     
     # newton
     if flag:
         ball_newton.pos.x = (ball_newton.v.x * (1 - exp(-damp*t)) )/damp
         ball_newton.pos.y = - g*t/damp + (damp*ball_newton.v.y + g) * (1 - exp(-damp*t))/damp**2
 
-    
-    xy_plot.plot(pos=(ball_vpy.pos.x,ball_vpy.pos.y))
-    xy_plot2.plot(pos=(ball_newton.pos.x,ball_newton.pos.y))
+    # xy_plot.plot(pos=(ball_vpy.pos.x,ball_vpy.pos.y))
+    # xy_plot2.plot(pos=(ball_newton.pos.x,ball_newton.pos.y))
 
     # stop the ball 
     if ball.pos.y <= 0:
         ball.v=vector(0,0,0)
 
-    if ball_vpy.pos.y <= 0:
-        ball_vpy.v=vector(0,0,0)
-
     if ball_newton.pos.y <= 0:
         flag =False
 
-print (t, ball.v)
+while ball_vpy.pos.y > 0: 
+    rate(1/dt)    #每一秒跑 1000 次
+    t = t + dt    #計時器
+    
+    AirRes = -ball_vpy.v*damp
+    
+    ball_vpy.a = Fg/m + AirRes/m
 
-
-
-'''
-xy_graph = graph(title=" XY plot" ,width=600,height=400 , x=100 ,y=10 ,xtitle="X" , ytitle="Y")
-
-xy_plot = gcurve( graph=xy_graph  , color=color.blue)
-
-xy_graph2 = graph(title=" XY plot" ,width=600,height=400 , x=100 ,y=10 ,xtitle="X" , ytitle="Y")
-
-xy_plot2 = gcurve( graph=xy_graph2  , color=color.blue)
-
-while t<5:
-
-    rate(1/dt) 
-    t = t + dt 
-
-    ball_newton.pos.x = (ball_newton.v.x * (1 - exp(-k*t)) )/k
-    ball_newton.pos.y = - g*t/k + (k*ball_newton.v.y + g) * (1 - exp(-k*t))/k**2
-
-    print(f"x:{ball_newton.pos.x} , y:{ball_newton.pos.y}")
-
-    xy_plot.plot(pos=(ball_newton.pos.x,ball_newton.pos.y))
-'''
+    ball_vpy.v = ball_vpy.v + ball_vpy.a*dt          
+    ball_vpy.pos = ball_vpy.pos + ball_vpy.v * dt 
