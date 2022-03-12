@@ -27,16 +27,7 @@ ball_newton.v = vector(3, 10, 0)
 dt = 0.001	#時間間隔 0.001 秒
 t = 0.0		#模擬初始時間為0秒
 
-damp = 0.2
-k=0.5
-
-xy_graph = graph(title=" XY plot" ,width=600,height=400 , x=100 ,y=10 ,xtitle="X" , ytitle="Y")
-
-xy_plot = gcurve( graph=xy_graph  , color=color.blue)
-
-xy_graph2 = graph(title=" XY plot newton" ,width=600,height=400 , x=100 ,y=10 ,xtitle="X" , ytitle="Y")
-
-xy_plot2 = gcurve( graph=xy_graph2  , color=color.red)
+k=0.2
 
 # while ball.pos.y > size or ball_vpy.pos.y > size or ball_newton.pos.y > size:    #模擬直到球落地 即y=球半徑
 flag = True
@@ -52,8 +43,8 @@ while ball.pos.y > 0 or ball_newton.pos.y > 0:
     
     # newton
     if flag:
-        ball_newton.pos.x = (ball_newton.v.x * (1 - exp(-damp*t)) )/damp
-        ball_newton.pos.y = - g*t/damp + (damp*ball_newton.v.y + g) * (1 - exp(-damp*t))/damp**2
+        ball_newton.pos.x = (ball_newton.v.x * (1 - exp(-k*t)) )/k
+        ball_newton.pos.y = - g*t/k + (k*ball_newton.v.y + g) * (1 - exp(-k*t))/k**2
 
     # xy_plot.plot(pos=(ball_vpy.pos.x,ball_vpy.pos.y))
     # xy_plot2.plot(pos=(ball_newton.pos.x,ball_newton.pos.y))
@@ -69,7 +60,7 @@ while ball_vpy.pos.y > 0:
     rate(1/dt)    #每一秒跑 1000 次
     t = t + dt    #計時器
     
-    AirRes = -ball_vpy.v*damp
+    AirRes = -ball_vpy.v*k
     
     ball_vpy.a = Fg/m + AirRes/m
 
