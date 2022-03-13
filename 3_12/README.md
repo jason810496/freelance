@@ -4,4 +4,4 @@
 
 其中`chapter-assign`代表`指定作業`, `chapter-check`代表`檢核作業`
 
-comment都有好ㄌ
+comment都有寫好ㄌ
