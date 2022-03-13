@@ -38,37 +38,44 @@ t = 0.0		#模擬初始時間為0秒
 
 k=0.2		# 空氣阻力係數
 
-while ball.pos.y > 0 or ball_vpy.pos.y > 0: #
+
+while ball.pos.y > 0 or ball_vpy.pos.y > 0: # 當黃球(ball)或紅球(ball_vpy)的y軸位置高於地面時就繼續跑
     rate(1/dt)    #每一秒跑 1000 次
     t = t + dt    #計時器
     
-    # theory
+    # 黃球（無阻力的理想拋體）
     ball.a = Fg/m 
     ball.v = ball.v + ball.a*dt          
     ball.pos = ball.pos + ball.v * dt   
     
-    # vpy
+    # 紅球（加入空氣阻力的拋體）
     AirRes = -ball_vpy.v*k
     ball_vpy.a = Fg/m + AirRes/m
     ball_vpy.v = ball_vpy.v + ball_vpy.a*dt          
     ball_vpy.pos = ball_vpy.pos + ball_vpy.v * dt
 
-    # xy_plot.plot(pos=(ball_vpy.pos.x,ball_vpy.pos.y))
-    # xy_plot2.plot(pos=(ball_newton.pos.x,ball_newton.pos.y))
-
-    # stop the ball 
+    '''要達到當球落地就停止 就檢查是否落到地面了
+    	if 落地：
+    		把該球的加速度&速度都設為0
+    
+    '''
     if ball.pos.y <= 0:
         ball.v=vector(0,0,0)
+        ball.a=vector(0,0,0)
 
     if ball_vpy.pos.y <= 0:
         ball_vpy.v= vector(0,0,0)
+        ball_vpy.a= vector(0,0,0)
+        
 
 t=0
-while ball_newton.pos.y > 0:
+'''重要！ ：記得把時間歸零'''
+
+while ball_newton.pos.y > 0: #當球沒落地就繼續跑
         rate(1/dt)    #每一秒跑 1000 次
         t = t + dt    #計時器
 
-        # newton
+        # 點坐標份別帶入公式
         ball_newton.pos.x = (ball_newton.v.x * (1 - exp(-k*t)) )/k
         ball_newton.pos.y = - g*t/k + (k*ball_newton.v.y + g) * (1 - exp(-k*t))/k**2
 
