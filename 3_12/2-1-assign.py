@@ -40,26 +40,26 @@ t = 0.0		#模擬初始時間為0秒
 k = 0.2		#空氣阻力係數
 
 while ball.pos.x <20:    #模擬直到球體的x位置在地板的右邊界（x=20 的位置
-    rate(1/dt)    #每一秒跑 1000 次
-    t = t + dt    #開始模擬到現在的總時間 
-    
-    AirRes = -ball2.v*k # 計算空氣阻力（公式為： f = (-k)*v )
-    
-    ball.a = Fg/m  # 理論狀態中球的加速度
-    ball2.a = Fg/m + AirRes/m # 計空氣阻力狀態中球的加速度
+        rate(1/dt)    #每一秒跑 1000 次
+        t = t + dt    #開始模擬到現在的總時間 
 
-	''''理論狀態中的球'''
-    ball.v = ball.v + ball.a*dt          #球的末速度 = 前一刻速度 + 加速度*時間間隔
-    ball.pos = ball.pos + ball.v * dt    #球的末位置 = 前一刻位置 + 速度*時間間隔
-	''''計空氣阻力狀態中球的球'''
-    ball2.v = ball2.v + ball2.a*dt          #球的末速度 = 前一刻速度 + 加速度*時間間隔
-    ball2.pos = ball2.pos + ball2.v * dt 	#球的末位置 = 前一刻位置 + 速度*時間間隔
-    
+        AirRes = -ball2.v*k # 計算空氣阻力（公式為： f = (-k)*v )
 
-    if ball.pos.y <= size and ball.v.y < 0:    #條件：球心高度小於球半徑且速度沿-y軸
-            ball.v.y = - ball.v.y    #條件成立則球的速度加一負號表示反彈   
+        ball.a = Fg/m  # 理論狀態中球的加速度
+        ball2.a = Fg/m + AirRes/m # 計空氣阻力狀態中球的加速度
 
-    if ball2.pos.y <= size and ball2.v.y < 0: #同上
-            ball2.v.y = - ball2.v.y      
+        ''''理論狀態中的球'''
+        ball.v = ball.v + ball.a*dt          #球的末速度 = 前一刻速度 + 加速度*時間間隔
+        ball.pos = ball.pos + ball.v * dt    #球的末位置 = 前一刻位置 + 速度*時間間隔
+        ''''計空氣阻力狀態中球的球'''
+        ball2.v = ball2.v + ball2.a*dt          #球的末速度 = 前一刻速度 + 加速度*時間間隔
+        ball2.pos = ball2.pos + ball2.v * dt 	#球的末位置 = 前一刻位置 + 速度*時間間隔
+
+
+        if ball.pos.y <= size and ball.v.y < 0:    #條件：球心高度小於球半徑且速度沿-y軸
+                ball.v.y = - ball.v.y    #條件成立則球的速度加一負號表示反彈   
+
+        if ball2.pos.y <= size and ball2.v.y < 0: #同上
+                ball2.v.y = - ball2.v.y      
 
 #print (t, ball.v)
