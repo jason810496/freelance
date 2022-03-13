@@ -17,25 +17,43 @@ typedef pair<int,int> pii;
 const int N = 6;
 const int INF = 1e9;
 
-int n ,arr[15],st,ed;
+int n ,arr[15],st,ed ;
 bool vis[15]={};
-vector<int> ans;
+set<string> Same;
 
-void rec(int st,int cnt , int step){
-    if(step>6){
-        if(cnt=6{
-            for(auto i:ans){
-                cout<<i<<' ';
+inline string HASH(){
+    string str;
+    for(int i=0;i<n;i++){
+        if(vis[i]){
+            str+=to_string(arr[i]);
+        }
+    }
+    return str;
+}
+void rec(int step,int cnt){
+    if( step >= N){
+        if( cnt == N ){
+            string h = HASH();
+            if( Same.find(h)!=Same.end()){
+                return;
+            }
+            Same.insert(h);
+            for(int i=0;i<n;i++){
+                if(vis[i]){
+                    cout<<arr[i]<<' ';
+                }
             }
             cout<<'\n';
         }
-        return ;
+        return;
     }
-
-    if(vis[st]) ans.push_back()
-
-    for(int i=0;i<n;i++){
-        rec()
+    for(int i=step;i<n;i++){
+        if(!vis[i]){
+            vis[i]=1;
+            rec(step+1,cnt+1);
+            vis[i]=0;
+            rec(step+1,cnt);
+        }
     }
 }
 signed main(){
@@ -44,13 +62,6 @@ signed main(){
         cin>>arr[i];
     }
 
-    MEM(vis,1);
-
-    for(int x=n-6,i=0;i<x;i++){
-        vis[i]=1;
-        rec(i,0,0);
-        vis[i]=0;
-        rec(i,0,0);
-    }
+    rec(0,0);
     return 0;
 }

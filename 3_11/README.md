@@ -4,7 +4,7 @@
 AC
 
 6. set permutation
-
+WA ?? maybe there are multiple same elements ??
 7. 2D rank finding
 
 8. merge sort 

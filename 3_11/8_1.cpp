@@ -14,64 +14,26 @@ using namespace std;
 #define REP(i,st,n) for(int i=st;i<=n;++i)
 #define PB emplace_back
 typedef pair<int,int> pii;
-const int MAX_N = 1e8;
+const int MAX_N = 50005;
 const int INF = 1e9;
 
-int MOD = 524287;
-
-int Merge(int *arr,int *temp,int L,int R,int mid){
-    int inv=0,idx=0;
-    int l=L,r=R,m=mid;
-
-    while( l<mid && m<=R ){
-        if(arr[l]<=arr[m]){
-            temp[idx++]=arr[l++];
-        }
-        else{
-            temp[idx++]=arr[m++];
-            inv+=(mid-l);
-        }
-    }
-
-    while(l<mid){
-        temp[idx++]=arr[l++];
-    }
-
-    while(m<=R){
-        temp[idx++]=arr[m++];
-    }
-
-    for(int i=L;i<R;i++){
-        arr[i]=temp[i];
-    }
-
-    return inv%MOD;
-}
-int Sort(int *arr,int *temp,int l,int r){
-    int inv=0;
-    
-    if(l<r){
-        int mid=(l+r)/2;
-        inv=(inv+Sort(arr,temp,l,mid))%MOD;
-        inv=(inv+Sort(arr,temp,mid+1,r))%MOD;
-        inv=(inv+Merge(arr,temp,l,r,mid))%MOD;
-    }
-
-    return inv;
-}
+unsigned int arr[100100]={};
 
 signed main(){
     int n;
     cin>>n;
-    int arr[n],temp[n];
-
-    for(int i=0;i<n;i++){
-        cin>>arr[i];
+    for(int i=0,x;i<n;i++){
+        cin>>x;
+        int y= x+50005;
+        arr[y]++;
     }
-    cout<<Sort(arr,temp,0,n-1);
 
-    for(int i=0;i<n;i++){
-        cout<<arr[i]<<" ";
+    for(int i=0;i<100005;i++){
+        if(arr[i]>0){
+            for(int j=0,x=arr[i];j<x;j++){
+                cout<<i-50005<<' ';
+            }
+        }
     }
     
     return 0;

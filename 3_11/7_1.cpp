@@ -62,6 +62,8 @@ signed main(){
         X_mx=max(X_mx,i.F);
         i.S = (lower_bound(range(Y),i.S)-Y.begin())+1;
         Y_mx=max(Y_mx,i.S);
+
+        cout<<i.F<<' '<<i.S<<'\n';
     }
     
     MX=max(X_mx,Y_mx);
@@ -89,4 +91,17 @@ in :
 
 out:
 0 1 5 0 2 4 4
+*/
+
+
+/*
+dec:
+2 1
+3 1
+4 7
+1 4
+4 3
+4 6
+7 5
+
 */
