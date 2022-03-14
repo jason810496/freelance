@@ -21,39 +21,35 @@ signed main(){
     int K;
     cin>>K;
     
-    vector<vector<int> > vec(K);
-    map<int,int> M;
+    vector<pii> vec;
     for(int k=0;k<K;k++){
-        int n; cin>>n;
-        vec[k].resize(n);
+        int n ,x; cin>>n;
+        for(int i=0;i<n;i++){
+            cin>>x;
+            vec.push_back({x,k});
+        }
 
-        for(int &i:vec[k]){
-            cin>>i;
-            
-            auto it = M.find(i);
+    }
 
-            if(it==M.end()){
-                M[i]=0;
+    sort(range(vec));
+    unordered_map<int,int> Window;
+    int n = vec.size() , l=0;
+    pii ans={-INF,INF} , init = {-INF,INF};
+
+     int i = 0, k = 0;
+    unordered_map<int, int> window;
+    for (int j = 0; j < vec.size(); ++j) {
+        window[vec[j].S]++;
+        if (window.size() == K ) { 
+            while (window[vec[i].S] > 1) --window[vec[i++].S]; 
+            if (ans==init || ans.S-ans.F > vec[j].F - vec[i].F) {
+                ans = {vec[i].F, vec[j].F};
             }
-            else M[i]++;
         }
     }
 
-    vector<int> Final;
+    cout<<ans.F<<' '<<ans.S;
 
-    for( auto i:M){
-        if(i.S >= K){
-            Final.push_back(i.F);
-        }
-    }
-
-    int n=Final.size() , r=INF;
-    pii ans;
-    for(int i=1,t;i<n;i++){
-        t=Final[i]-Final[i-1];
-        if(t<r){
-            
-        }
-    }
+    
     return 0;
 }
