@@ -1,7 +1,6 @@
 
 #pragma GCC optimize("Ofast,unroll-loops,no-stack-protector,fast-math")
 #pragma GCC optimize("O3")
-
 #pragma GCC optimize("O2")
 #include<bits/stdc++.h>
 using namespace std;
@@ -20,13 +19,16 @@ const int INF = 1e9;
 
 struct P{
 	int x ,y , idx;
-} Points[N] , temp[N];
+};
+
+P Points[N] , temp[N] ;
 
 int rk[N];
 void Merge(int l,int m,int r){
 	int i=l , j=m+1 , k=l ,  cnt=0;
 
 	while( i<=m && j<=r ){
+		cout<<"in\n";
 		if( Points[i].y < Points[j].y ){
 			temp[k] = Points[i];
 			cnt++;
@@ -35,6 +37,7 @@ void Merge(int l,int m,int r){
 		else{
 			temp[k] = Points[j];
 			rk[ Points[j].idx ] += cnt;
+			cnt++;
 			k++,j++;
 		}
 	}
@@ -55,7 +58,7 @@ void Merge(int l,int m,int r){
 	}
 }
 void Sort_Y(int l,int r){
-	if( l<=r ) return ;
+	if( l>=r ) return ;
 	int m = (l+r)/2 ;
 
 	Sort_Y(l,m);
@@ -68,13 +71,13 @@ signed main() {
 	int n ;
 	cin>>n;
 	for(int i=0;i<n;i++){
-		cin>>Points[i].x >> Points[i].y;
+		cin>>Points[i].x>>Points[i].y;
 		Points[i].idx = i;
 	}
 
-	sort(Points,Points+n,[&](P &a,P &b){
-		return (a.x<b.x ? 1:(a.x==b.x ? a.y<b.y: 0) );
-	});
+	// sort(Points,Points+n,[&](P &a,P &b){
+	// 	return (a.x<b.x ? 1:(a.x==b.x ? a.y<b.y: 0) );
+	// });
 
 	cout<<"---\n";
 	for(int i=0;i<n;i++){
