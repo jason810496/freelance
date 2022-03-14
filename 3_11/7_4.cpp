@@ -28,8 +28,7 @@ void Merge(int l,int m,int r){
 	int i=l , j=m+1 , k=l ,  cnt=0;
 
 	while( i<=m && j<=r ){
-		cout<<"in\n";
-		if( Points[i].y < Points[j].y ){
+		if( Points[i].y <= Points[j].y ){
 			temp[k] = Points[i];
 			cnt++;
 			k++,i++;
@@ -37,14 +36,12 @@ void Merge(int l,int m,int r){
 		else{
 			temp[k] = Points[j];
 			rk[ Points[j].idx ] += cnt;
-			cnt++;
 			k++,j++;
 		}
 	}
 
 	while( i<=m ){
 		temp[k++] = Points[i++];
-		cnt++;
 	}
 
 	while( j<=r ){
@@ -75,20 +72,20 @@ signed main() {
 		Points[i].idx = i;
 	}
 
-	// sort(Points,Points+n,[&](P &a,P &b){
-	// 	return (a.x<b.x ? 1:(a.x==b.x ? a.y<b.y: 0) );
-	// });
+	sort(Points,Points+n,[&](P &a,P &b){
+		return (a.x<b.x ? 1:(a.x==b.x ? a.y<b.y: 0) );
+	});
 
-	cout<<"---\n";
-	for(int i=0;i<n;i++){
-		cout<<Points[i].x<<' '<<Points[i].y<<'\n';
-	}
+	// cout<<"---\n";
+	// for(int i=0;i<n;i++){
+	// 	cout<<Points[i].x<<' '<<Points[i].y<<'\n';
+	// }
 	Sort_Y(0,n-1);
 
-	cout<<"---\n";
-	for(int i=0;i<n;i++){
-		cout<<Points[i].x<<' '<<Points[i].y<<'\n';
-	}
+	// cout<<"---\n";
+	// for(int i=0;i<n;i++){
+	// 	cout<<Points[i].x<<' '<<Points[i].y<<'\n';
+	// }
 	
 
 	for(int i=0;i<n;i++){
@@ -107,5 +104,5 @@ signed main() {
 5 8
 9 7
 
-
+0 1 5 0 2 4 4
 */
