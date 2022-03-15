@@ -1,6 +1,5 @@
 # Algorithm assignment
 
-
 5. array inversion
 count array inversion
  - Binary Index Tree
