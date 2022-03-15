@@ -57,6 +57,8 @@ Divide & Conquer (**HARD**)
 9. min heap 
 
 min heapify array & print array in level ordered 
+
+
 10. Smallest Range Covering Elements from k Lists
 
 sort + sliding window ( from leetcode HARD )
