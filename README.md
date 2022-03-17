@@ -5,6 +5,7 @@
  - 3/10
  - 3/11
  - 3/12
+ - 3/16
  
 ### 演算法作業 (2/26)
 大二演算法作業
@@ -36,6 +37,9 @@ Python讀寫xlsx檔案和繪製圖表教學範例
 
 
 `Python` `vpython` `physics`
+
+### Java syntax assignment
+
 
 
 ## 編寫總時間
