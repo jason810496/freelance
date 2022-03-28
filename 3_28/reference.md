@@ -19,4 +19,8 @@
 [From stackoverflow](https://stackoverflow.com/questions/7908636/how-to-add-hovering-annotations-in-matplotlib)
 
 
+### contains 
+
+[Ax.contains](https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.axis.Axis.contains.html)
+
 
