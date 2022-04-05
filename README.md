@@ -40,8 +40,19 @@ Python讀寫xlsx檔案和繪製圖表教學範例
 `Python` `vpython` `physics`
 
 ### Java syntax assignment (3/16)
+Java 基本語法作業
+`Java`
 
 ### Python data visualization (3/28)
+
+將座標點與數值視覺化
+### 演算法作業(4/3)
+
+主要是 sorting + binary search , set 
+`C++` `Algorithm` `colleage-assignment`
+### Java syntax assignment (4/4)
+Java 基本語法作業
+`Java`
 
 
 ## 編寫總時間
