@@ -1,5 +1,5 @@
 
-public class HW_06_8110056004_1{
+public class HW06_8110056004_1{
 	public double find_median(int[][]  arr){
 	    
 	    
