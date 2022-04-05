@@ -3,34 +3,42 @@ public class HW_1{
 	public double find_median(int[][]  arr){
 	    
 	    
-		int n=arr.length;
-		ArrayList<Integer> List = new ArrayList<Integer>();
-	
-		for(int i=0;i<n;i++){
-			for(int j:arr[i]){
-				List.add(j);
-			}
-		}
-		
-		Collections.sort(List);  
-		
-		int  sz = List.size();
-		
-		if( sz%2==1 ){
-			int a=List.get(sz/2);
-			return Double.valueOf(a);
-		} 
-		
-		double a= Double.valueOf( List.get(sz/2) ), b = Double.valueOf(List.get(sz/2 -1 ) );
-		return (a+b)/2;
-	}
+        int n=arr.length , idx=0;
+        int List[] = new int[5000];
+
+        for(int i=0;i<n;i++){
+            for(int j:arr[i]){
+                List[idx++]=j;
+            }
+        }
+        
+        // b sort
+        
+        for(int i=0;i<idx;i++){
+            for(int j=0;j<i;j++){
+                if( List[i]<List[j] ){
+                    int temp =  List[i];
+                    List[i] = List[j];
+                    List[j] = temp;
+                }
+            }
+        }
+        
+        int  sz = idx;
+        
+        if( sz%2==1 ){
+            int a=List[sz/2];
+            return Double.valueOf(a);
+        } 
+        
+        double a= Double.valueOf( List[sz/2] ), b = Double.valueOf(List[sz/2 -1 ]);
+        return (a+b)/2;
+    }
 }
 
 
-/*
-import java.util.ArrayList;
-import java.util.Collections;
 
+/*
 public class HW
 {
 	public static void main (String[] args){
@@ -48,29 +56,40 @@ public class HW
 	public double find_median(int[][]  arr){
 	    
 	    
-        int n=arr.length;
-        ArrayList<Integer> List = new ArrayList<Integer>();
+        int n=arr.length , idx=0;
+        int List[] = new int[5000];
 
         for(int i=0;i<n;i++){
             for(int j:arr[i]){
-                List.add(j);
+                List[idx++]=j;
             }
         }
         
-        Collections.sort(List);  
+        // b sort
         
-        int  sz = List.size();
+        for(int i=0;i<idx;i++){
+            for(int j=0;j<i;j++){
+                if( List[i]<List[j] ){
+                    int temp =  List[i];
+                    List[i] = List[j];
+                    List[j] = temp;
+                }
+            }
+        }
+        
+        int  sz = idx;
         
         if( sz%2==1 ){
-            int a=List.get(sz/2);
+            int a=List[sz/2];
             return Double.valueOf(a);
         } 
         
-        double a= Double.valueOf( List.get(sz/2) ), b = Double.valueOf(List.get(sz/2 -1 ) );
+        double a= Double.valueOf( List[sz/2] ), b = Double.valueOf(List[sz/2 -1 ]);
         return (a+b)/2;
     }
 	
 }
 
 */
+
 
