@@ -4,7 +4,7 @@ public class HW06_8110056004_1{
 	    
 	    
         int n=arr.length , idx=0;
-        int List[] = new int[5000];
+        int List[] = new int[50000];
 
         for(int i=0;i<n;i++){
             for(int j:arr[i]){
