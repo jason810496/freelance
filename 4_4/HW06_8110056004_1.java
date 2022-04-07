@@ -1,10 +1,9 @@
-
+import java.util.*;
 public class HW06_8110056004_1{
 	public double find_median(int[][]  arr){
 	    
-	    
         int n=arr.length , idx=0;
-        int List[] = new int[5000];
+        int List[] = new int[500000];
 
         for(int i=0;i<n;i++){
             for(int j:arr[i]){
@@ -12,17 +11,25 @@ public class HW06_8110056004_1{
             }
         }
         
-        // b sort
-        
-        for(int i=0;i<idx;i++){
-            for(int j=0;j<i;j++){
-                if( List[i]<List[j] ){
-                    int temp =  List[i];
-                    List[i] = List[j];
-                    List[j] = temp;
-                }
+        public double find_median(int[][]  arr){
+	    
+	    
+        int n=arr.length , idx=0;
+        int List[] = new int[500000];
+
+        for(int i=0;i<n;i++){
+            for(int j:arr[i]){
+                List[idx++]=j;
             }
         }
+        
+        
+       sort(List,0,idx-1);
+       
+    //   for(int i=0;i<idx;i++){
+    //       System.out.print(List[i]+" ");
+    //   }
+    //     System.out.print("\n");
         
         int  sz = idx;
         
@@ -31,10 +38,64 @@ public class HW06_8110056004_1{
             return Double.valueOf(a);
         } 
         
-        double a= Double.valueOf( List[sz/2] ), b = Double.valueOf(List[sz/2 -1 ]);
+        double a= Double.valueOf( List[sz/2] ), b = Double.valueOf(List[ (sz-1)/2]);
         return (a+b)/2;
     }
+	private void sort(int arr[], int l, int r){
+        if (l < r) {
+            int m =l+ (r-l)/2;
+  
+            sort(arr, l, m);
+            sort(arr, m + 1, r);
+  
+            merge(arr, l, m, r);
+        }
+    }
+    private void merge(int arr[], int l, int m, int r)
+    {
+        int n1 = m - l + 1;
+        int n2 = r - m;
+  
+        int L[] = new int[n1];
+        int R[] = new int[n2];
+  
+        for (int i = 0; i < n1; ++i){
+            L[i] = arr[l + i];
+        }
+           
+        for (int j = 0; j < n2; ++j){
+            R[j] = arr[m + 1 + j];
+        }
+  
+        int i = 0, j = 0;
+  
+        int k = l;
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                arr[k] = L[i];
+                i++;
+            }
+            else {
+                arr[k] = R[j];
+                j++;
+            }
+            k++;
+        }
+  
+        while (i < n1) {
+            arr[k] = L[i];
+            i++;
+            k++;
+        }
+  
+        while (j < n2) {
+            arr[k] = R[j];
+            j++;
+            k++;
+        }
+    }
 }
+
 
 
 
