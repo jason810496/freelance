@@ -1,21 +1,10 @@
-import java.util.*;
+
 public class HW06_8110056004_1{
 	public double find_median(int[][]  arr){
 	    
-        int n=arr.length , idx=0;
-        int List[] = new int[500000];
-
-        for(int i=0;i<n;i++){
-            for(int j:arr[i]){
-                List[idx++]=j;
-            }
-        }
-        
-        public double find_median(int[][]  arr){
-	    
 	    
         int n=arr.length , idx=0;
-        int List[] = new int[500000];
+        int List[] = new int[5000000];
 
         for(int i=0;i<n;i++){
             for(int j:arr[i]){
