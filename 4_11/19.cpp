@@ -34,23 +34,49 @@ typedef pair<int,int> pii;
 const int MAX_N = 500005;
 const int INF = 1e9;
 
-
+/*
+codeforce 1295C
+*/
 void slove(){
     string A,B;
     cin>>A>>B; 
     int n=A.size() , m=B.size();
-    vector<vector<int> > dp(n+1,vector<int>(m+1,0));
+    vector<vector<int> > dp(n+1,vector<int>(27,-1));
 
-    for(int i=1;i<=n;i++){
-        for(int j=1;j<=m;j++){
-            if(A[i-1]==B[j-1]){
-                dp[i][j]=dp[i-1][j-1]+1;
+    for(int i=n-1;i>=0;i--){
+        for(int j=0;j<26;j++){
+            dp[i][j]=dp[i+1][j];
+        }
+        dp[i][ A[i]-'a' ] = i;
+    }
+
+    // for(int i=0;i<n;i++){
+    //     for(int j=0;j<26;j++){
+    //         cout<<dp[i][j]<<' ';
+    //     }
+    //     cout<<'\n';
+    // }
+
+    int cnt=0 , idx=0 ,ans=1;
+
+    while(cnt < m){
+        if(dp[idx][ B[cnt]-'a' ] ==-1 ){
+            if(idx==0 ){
+                ans=-1;
+                break;
             }
             else{
-                dp[i][j]=max(dp[i-1][j] ,dp[i][j-1]);
+                idx=0;
+                ans++;
+                continue;
             }
         }
+
+        idx = dp[idx][ B[cnt]-'a' ]+1;
+        cnt++;
     }
+
+    cout<<ans<<'\n';
 }
 
 signed main(){
