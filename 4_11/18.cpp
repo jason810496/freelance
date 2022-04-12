@@ -47,7 +47,7 @@ struct Cmp {
 void slove(){
     int n ,w ;
     cin>>n>>w;
-    vector<int> vec;
+    vector<ll> vec(1,0);
 
     char tp;
     for(int x ,i=0 ;i<n;i++){
@@ -56,13 +56,12 @@ void slove(){
         vec.push_back(x);
     }
 
+    vec.push_back(w);
     n=vec.size();
-    int Last = 0 , MX=-1;
-    for(int i=0;i<n;i++){
-        MX=max(MX, vec[i] - Last);
-        Last=vec[i];
+    ll MX=-1;
+    for(int i=1;i<n;i++){
+        MX=max(MX, vec[i] - vec[i-1]);
     }
-    MX=max(MX, w - Last);
     cout<<MX<<'\n';
 }
 
