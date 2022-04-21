@@ -5,10 +5,6 @@ Merge( all subset ):
     while element is the smallest in all subset:
         push element to temp 
 
-    for all subset:
-        if not iterate to end of ith subset:
-            push remain element to temp
-
     return temp array
 
 
