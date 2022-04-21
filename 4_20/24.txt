@@ -5,3 +5,6 @@ quick - sort
 
 
 (b) quick sort best case O(n)
+
+
+
