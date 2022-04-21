@@ -1,0 +1,7 @@
+
+quick - sort
+
+(a) quick sort worse case O(n^2)
+
+
+(b) quick sort best case O(n)

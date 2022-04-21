@@ -1,0 +1,25 @@
+Merge( all subset ):
+
+    new temp array in length of subset * 3
+
+    while element is the smallest in all subset:
+        push element to temp 
+
+    for all subset:
+        if not iterate to end of ith subset:
+            push remain element to temp
+
+    return temp array
+
+
+Sort ( arr ):
+    if length of arr <=1 :
+        stop recursion
+
+    divide arr in 3 subset
+    for all subset:
+        Sort( ith Subset )
+
+    Merge( all subset )
+    
+
