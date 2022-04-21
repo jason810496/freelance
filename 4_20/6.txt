@@ -1,0 +1,30 @@
+/*
+
+6 8 13 16 19 24 25 27 28
+
+16 : math proof
+
+25 , 27 , 28 : Matrix multiplication
+
+
+*/
+
+
+Search_item( left_index , right_index , target):
+
+    divide array in size of n/3
+
+    the i_index, j_index , k_index point to the start of 3 sub-array  
+
+    while i_index < j_index < k_index:  
+
+        if target > array[ j_index ]:
+            i_index = j_index+1 
+        else if taret < array[ j_index ]:
+            k_index = j_index-1
+        else:
+            return true
+
+        j_index = (i_index+k_index )/2
+
+    return false
