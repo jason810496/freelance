@@ -77,7 +77,7 @@ signed main(){
             Availble = arr[i].ed;
         }
         else{
-            Availble = arr
+            Availble = arr;
         }
     }
     return 0;
