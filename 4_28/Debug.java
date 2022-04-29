@@ -4,8 +4,20 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
 
-public  class HW07_8110056004_1{
-	public int[][] bestPhone(int[][] inputArr){ 
+public class Debug{
+    public static void main(String[] args){
+        int[][] test1 = {{1,1},{2,4},{2,10},{5,4},{4,8},{5,5},{8,4},{10,2},{10,1}} ;
+        
+        int[][] test2 = {{1,1},{2,4},{2,10},{5,4},{4,8},{5,5},{8,4},{10,2},{10,1},{100,100}} ;
+        int[][] ans1 = Solution( test1 );
+        int[][] ans2 = Solution( test2 );
+        
+        System.out.println(Arrays.deepToString( ans1 ));
+        System.out.println(Arrays.deepToString( ans2 ));
+    }
+	public static int[][] Solution(int[][] inputArr){ 
+        // sort(inputArr, 0, inputArr.length);
+        
         Arrays.sort( inputArr , new Comparator<int[]>() {
             @Override
             public int compare(int[] first, int[] second) {
@@ -34,7 +46,6 @@ public  class HW07_8110056004_1{
         
         return res;
     }
+   
 }
-
-
 
