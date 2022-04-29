@@ -40,62 +40,46 @@ struct item{
     int val , ed , t;
 };
 
+struct CMP{
+    bool operator()(item &a,item &b){
+        return a.val < b.val;
+    }
+};
+
 inline bool cmp(const item &a ,const item &b){
-    return ( a.ed < b.ed ? 1:(a.ed==b.ed ? a.t<b.t:0));
+    // return ( a.ed < b.ed ? 1:(a.ed==b.ed ? a.t<b.t:0));
+
+    // return (a.ed<b.ed ? 1: (a.ed==b.ed ? a.t<b.t:0));
+
+    return a.ed < b.ed ;
 };
 signed main(){
     OAO
     
     int n ; cin>>n;
+    int Mx_time = 0;
     vector< item > arr(n);
 
     for(auto &i:arr){
         cin>>i.val>>i.ed>>i.t;
+        Mx_time = max( Mx_time , i.ed );
     }
 
     sort(range(arr), cmp);
 
-    // cout<<"======\n";
-    // for(auto &i:arr){
-    //     cout<<i.val<<' '<<i.ed<<' '<<i.t<<'\n';
-    // }
-    // cout<<"======\n";
+    int ans=0;
 
-    vector<int> dp(n),Time(n);
+    priority_queue< item , vector<int> , CMP > pq;
 
-    dp[0] = (arr[0].t<=arr[0].ed ? arr[0].val:0);
-    Time[0] = (dp[0]==0 ? 0:arr[0].t);
-    for(int i=1;i<n;i++){
-        int L=0 , R=i-1 ,idx=-1;
-
-        int Inclusive = arr[i].val;
-
-        while( L<= R){
-            int mid=(L+R)/2;
-
-            if( arr[i].ed >= Time[mid]+arr[i].t){
-                idx=mid;
-                L=mid+1;
-            }
-            else R=mid-1;
-        }
-
-        if( idx!=-1 ) Inclusive+=dp[idx];
-
-        // dp[i]=max( dp[i-1] , Inclusive );
-
-        if( dp[i-1] > Inclusive ){
-            Time[i] = Time[i-1];
-            dp[i]=dp[i-1];
+    for(int i=n-1 ; i>=0 ; i--){
+        int Availble;
+        if( !i ){
+            Availble = arr[i].ed;
         }
         else{
-            Time[i] = Time[i-1]+arr[i].t;
-            dp[i]=Inclusive;
+            Availble = arr;
         }
     }
-
-    cout<<dp[n-1];
-
     return 0;
 }
 

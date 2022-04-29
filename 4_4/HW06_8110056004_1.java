@@ -4,11 +4,7 @@ public class HW06_8110056004_1{
 	    
 	    
         int n=arr.length , idx=0;
-<<<<<<< HEAD
-        int List[] = new int[50000];
-=======
         int List[] = new int[5000000];
->>>>>>> 435be5841773bc9e3135208753fa56fa285b2998
 
         for(int i=0;i<n;i++){
             for(int j:arr[i]){
