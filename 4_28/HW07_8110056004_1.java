@@ -1,28 +1,16 @@
 
-// import java.util.Arrays;
-// import java.util.Comparator;
-// import java.util.List;
-// import java.util.ArrayList;
+
 
 public  class HW07_8110056004_1{
 	public int[][] bestPhone(int[][] inputArr){ 
-        // Arrays.sort( inputArr , new Comparator<int[]>() {
-        //     @Override
-        //     public int compare(int[] first, int[] second) {
-        //        if(first[1] < second[1]) return 1;
-        //        else return -1;
-        //     }
-        // });
         int n = inputArr.length , cur=0 , cnt=0;
 
         sort( inputArr , 0 ,n-1);
 
-        // List<List<Integer>> ans = new ArrayList<List<Integer>>();
         boolean[] flag = new boolean [n];
         for(int i=0;i<n;i++){
             if( inputArr[i][0] > cur ){
                 cur = inputArr[i][0];
-                // ans.add( Arrays.asList( inputArr[i][0] , inputArr[i][1]) );
                 flag[i] = true;
                 cnt++;
             }
