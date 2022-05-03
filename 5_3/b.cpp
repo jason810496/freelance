@@ -17,24 +17,25 @@ const int INF = 1e9;
 
 int temp[MAX_N] ;
 ll ans[MAX_N];
+unordered_map<int,int> Mp;
 
-ll Merge(int *arr,int l,int m,int r){
+void Merge(int *arr,int l,int m,int r){
     ll ret=0;
     int i=l,j=m+1,k=l;
     while( i<= m && j<= r){
         if(arr[i]<= arr[j]){
+            
+            ans[ Mp[ arr[i] ] ] +=ret;
             temp[k++]=arr[i++];
         }
         else{
-            temp[k]=arr[j++];
-            
-            ret=(ret+(m-i+1) )%MOD;
-
-            ans[k++] = ret;
+            ret++;
+            temp[k++]=arr[j++];
         }
     }
 
     while( i<=m ){
+        ans[ Mp[ arr[i]] ] +=ret;
         temp[k++] = arr[i++];
     }
 
@@ -46,18 +47,16 @@ ll Merge(int *arr,int l,int m,int r){
         arr[i]=temp[i];
     }
 
-    return ret;
 }
-int Sort(int *arr,int l,int r){
-    if( l>=r ) return 0; 
 
-    ll ret=0;
+void Sort(int *arr,int l,int r){
+    if( l>=r ) return ; 
+
     int m = (l+r)/2;
-    ret= (ret+Sort(arr,l,m)   )%MOD;
-    ret= (ret+Sort(arr,m+1,r) )%MOD;
-    ret= (ret+Merge(arr,l,m,r))%MOD;
-
-    return ret;
+    Sort(arr,m+1,r) ; // [m+1 , r]
+    Sort(arr,l,m)   ;// [l , m ]
+    
+    Merge(arr,l,m,r);
 }
 
 
@@ -67,9 +66,10 @@ signed main(){
     int arr[n];
     for(int i=0;i<n;i++){
         cin>>arr[i];
+        Mp[ arr[i] ] = i ;
     }
 
-    cout<<Sort(arr,0,n-1)<<'\n';
+    Sort(arr,0,n-1);
 
     for(int i=0;i<n;i++){
         cout<<arr[i]<<' ';
