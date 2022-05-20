@@ -23,7 +23,6 @@ int n , m ;
 int MX_Local=0 ,MX_loc_Player=0, ND_Total = 0 , MX_Total= 1 , MX_Total_Player = 0; 
 
 vector< vector<int> > G;
-vector< vector<bool> > vis;
 
 unordered_map<int,int> Mp;
 
@@ -32,9 +31,9 @@ int clr;
 bool flag = false;
 
 int BFS(int x,int y){
-    vis[x][y] = 1;
-    sz = 0;
     clr = G[x][y];
+    G[x][y] = -1;
+    sz = 0;
     flag = false;
 
     queue<pii> q; 
@@ -51,9 +50,10 @@ int BFS(int x,int y){
             int i = x+Move[k][0] , j=  y+Move[k][1];
             if( i<0 || j<0 || i>=n || j>=m ) continue;
             if( G[i][j]==1 ) flag = true;
-            if( vis[i][j] || G[i][j]!=clr ) continue;
+            if( G[i][j]<0 || G[i][j]!=clr ) continue;
             q.push( { i, j } );
-            vis[i][j]=1;
+
+            G[i][j]= -1;
         }
     }
     
@@ -66,7 +66,6 @@ signed main(){
     int Area=0;
 
     G.resize(n , vector<int>(m) );
-    vis.resize( n , vector<bool>(m ) );
 
     for(int i=0;i<n;i++){
         for(int j=0;j<m;j++) cin>>G[i][j];
@@ -75,7 +74,7 @@ signed main(){
     for(int i=0;i<n;i++){
         for(int j=0;j<m;j++){
 
-            if( !vis[i][j] ){
+            if( G[i][j]>0 ){
                 
                 BFS(i,j);
                 // cout<<sz<<'\n';
