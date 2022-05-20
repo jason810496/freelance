@@ -3,10 +3,13 @@ using namespace std ;
 
 // # define mys (c , n ) (((( c ) << (( n ) % 7) ) | (( c ) >> (7 - (( n ) % 7) ) ) ) & 127)
 
-
+// 7 bit rotation 
 inline int mys(int c,int n ){
     return (((( c ) << (( n ) % 7) ) | (( c ) >> (7 - (( n ) % 7) ) ) ) & 127) ;
 }
+
+// mys(c, n) = d for some n if and only if mys(d, m) = c for some m
+
 int main () {
     string plaintext ;
     getline ( cin , plaintext ) ;
@@ -30,6 +33,8 @@ int main () {
         assert ( c >= 32 && c <= 126) ;
         x = p ;
         y = c ;
+
+        // 3 -> 000011 
         ciphertext += c ;
     }
 
