@@ -30,19 +30,24 @@ signed main(){
 
     vec.push_back( { n,m } );
 
-    sort( range(vec) ,[&](const pii &a,const pii &b){
-        return (a.F < b.F || (a.F==b.F && a.S > b.S) );
+    sort( range(vec) ,[](const pii &a,const pii &b){
+        return ( a.F==b.F ? a.S>b.S : a.F<b.F );
     });
 
+    // cout<<"======\n";
+    // for(auto i:vec){
+    //     cout<<i.F<< ' '<<i.S<<'\n';
+    // }
     vector<int> LIS;
-
+    
     for(pii &P:vec ){
-        auto it = upper_bound(range(LIS), P.S );
-        if( it==LIS.end() ) LIS.push_back( P.S );
-        else *it = P.S;
+        int cur =  P.S ; 
+        auto it = lower_bound(range(LIS) , cur ) ;
+        if( LIS.empty() || LIS.back() < cur ) LIS.push_back( cur );
+        else *it = cur ;
     }
 
-    cout<<LIS.size();
+    cout<<LIS.size()<<'\n';
     return 0;
 }
 
