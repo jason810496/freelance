@@ -16,6 +16,10 @@ typedef pair<int,int> pii;
 const int MAX_N = 500005;
 const int INF = 1e9;
 
+
+// AC
+
+
 ll C(int x,int y){
     int y2 = x-y;
     y = min ( y ,y2 );
