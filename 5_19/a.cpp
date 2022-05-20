@@ -27,9 +27,10 @@ signed main(){
     //     cout<<char(i)<<'\n';
     // }
     string encrypt;
+    getline(cin,encrypt);
     string Ahoy = "Ahoy!!";
 
-    cin>>encrypt;
+    // cin>>encrypt;
 
     int magic[4] ;
     // int arr[7] = {49, 98, 69, 11, 22, 44, 88};
@@ -58,19 +59,51 @@ signed main(){
         for(int b=0;b<7;b++){
             for(int c=0;c<7;c++){
                 for(int d=0;d<7;d++){
-                    int A = arr[0][a];
-                    int B = arr[1][b];
-                    int C = arr[2][c];
-                    int D = arr[3][d];
+                    magic[0] = arr[0][a];
+                    magic[1] = arr[1][b];
+                    magic[2] = arr[2][c];
+                    magic[3] = arr[3][d];
 
-                    if( A==58 && B==128 && C==118 && D == 18 ){
-                        // cout<<A<<B<<C<<D;
+                    char p , c , x = 0 , y = 0;
+                    string temp ;
+                    int i = 0;
+                    for ( ; i < 6 ; i ++) {
+                        p = Ahoy[ i ];
+                        // assert ( p >= 32 && p <= 126) ;
+                        c = mys ( mys ( p ^ x , i ) , mys ( p ^ y , i )) ^ mys ( mys ( magic [( p ^ x ) &3] , i ) , mys ( magic [( p ^ y ) & 3] , i ) ) ;
+                        // assert ( c >= 32 && c <= 126) ;
+                        // if( !( c >= 32 && c <= 126) ) break;
+                        x = p ;
+                        y = c ;
 
-                        flag = true;
+                        // 3 -> 000011 
+                        temp += c ;
                     }
 
-                    // cout<<A<<' '<<B<<' '<<C<<' '<<D<<'\n';
-                    ans++;
+                    if( temp == encrypt.substr(0,6) ){
+                        
+                        cout<<temp<<'\n';
+
+                        for(int i=0;i<4;i++){
+                            cout<<magic[i]<<' ';
+                        }
+                        cout<<'\n';
+
+                        for( ; i< encrypt.size() ; i++) {
+                            p = Ahoy[ i ];
+                            // assert ( p >= 32 && p <= 126) ;
+                            c = mys ( mys ( p ^ x , i ) , mys ( p ^ y , i )) ^ mys ( mys ( magic [( p ^ x ) &3] , i ) , mys ( magic [( p ^ y ) & 3] , i ) ) ;
+                            // assert ( c >= 32 && c <= 126) ;
+                            // if( !( c >= 32 && c <= 126) ) break;
+                            x = p ;
+                            y = c ;
+                            temp += c ;
+                        }
+
+                        cout<<temp<<'\n';
+                    }
+
+                    
                 }
             }
         }
