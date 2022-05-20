@@ -16,6 +16,8 @@ typedef pair<int,int> pii;
 const int MAX_N = 500005;
 const int INF = 1e9;
 
+
+// AC
 int arr[105];
 int n ; 
 
