@@ -26,38 +26,10 @@ vector< vector<int> > G;
 
 unordered_map<int,int> Mp;
 
-int sz= 0 ;
-int clr;
-bool flag = false;
-
-int BFS(int x,int y){
-    clr = G[x][y];
-    G[x][y] = -1;
-    sz = 0;
-    flag = false;
-
-    queue<pii> q; 
-
-    q.push({x,y});
-
-    while( q.size() ) {
-        x=q.front().F;
-        y=q.front().S;
-        q.pop();
-        sz++;
-
-        for(int k=0;k<4;k++){
-            int i = x+Move[k][0] , j=  y+Move[k][1];
-            if( i<0 || j<0 || i>=n || j>=m ) continue;
-            if( G[i][j]==1 ) flag = true;
-            if( G[i][j]<0 || G[i][j]!=clr ) continue;
-            q.push( { i, j } );
-
-            G[i][j]= -1;
-        }
-    }
+// int BFS(int x,int y){
     
-}
+    
+// }
 
 signed main(){
     OAO
@@ -76,7 +48,33 @@ signed main(){
 
             if( G[i][j]>0 ){
                 
-                BFS(i,j);
+                // BFS(i,j);
+
+                int clr = G[i][j];
+                G[i][j] = -1;
+                int sz = 0;
+                bool flag = false;
+
+                queue<pii> q; 
+
+                q.push({i,j});
+
+                while( q.size() ) {
+                    int x=q.front().F;
+                    int y=q.front().S;
+                    q.pop();
+                    sz++;
+
+                    for(int k=0;k<4;k++){
+                        int I = x+Move[k][0] , J=  y+Move[k][1];
+                        if( I<0 || J<0 || I>=n || J>=m ) continue;
+                        if( G[I][J]==1 ) flag = true;
+                        if( G[I][J]<0 || G[I][J]!=clr ) continue;
+                        q.push( { I, J } );
+
+                        G[I][J]= -1;
+                    }
+                }
                 // cout<<sz<<'\n';
                 
                 Mp[ clr ]+=sz;
