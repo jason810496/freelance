@@ -20,7 +20,7 @@ signed main(){
     OAO
     int n ; cin>>n ;
 
-    vector<int> process(n) , Start(n) , End(n);
+    vector<ll> process(n) , Start(n) , End(n);
 
     for(int i=0;i<n;i++){
         cin>>process[i]>>Start[i]>>End[i];
@@ -29,13 +29,16 @@ signed main(){
     int q; cin>>q;
 
     while( q-- ){
-        int L , R  ,t ;
+        int L , R ;
+        ll ans = 0 , t ;
         cin>>L>>R>>t;
-        ll ans = 0 ;
+        L--;
+        R--;
+        
 
         for(int j=  L  ;j<=R  ; j++){
             t = max( t, Start[j] ) + process[j];
-            ans += max( 0 , t - End[j] );
+            ans += max( 0LL , t - End[j] );
         }
 
         cout<<ans<<"\n";
