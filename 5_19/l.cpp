@@ -16,14 +16,6 @@ typedef pair<int,int> pii;
 const int MAX_N = 500005;
 const int INF = 1e9;
 
-struct Elevetor{
-    int Move , Capacity , Open;
-    Elevetor(int m =0  ,int c=0  ,int o = 0){
-        Move = m ; 
-        Capacity = c; 
-        Open = o;
-    }
-};
 signed main(){
     OAO
     int Start , Target ,Stair ;

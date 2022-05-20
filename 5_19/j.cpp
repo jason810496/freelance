@@ -16,19 +16,29 @@ typedef pair<int,int> pii;
 const int MAX_N = 1e5+5;
 const int INF = 1e9;
 
-ll T[MAX_N<<1];
-
-
-
 signed main(){
     OAO
     int n ; cin>>n ;
 
+    vector<int> process(n) , Start(n) , End(n);
+
+    for(int i=0;i<n;i++){
+        cin>>process[i]>>Start[i]>>End[i];
+    }
+
     int q; cin>>q;
 
     while( q-- ){
-        int L , R ; cin>>L>>R;
+        int L , R  ,t ;
+        cin>>L>>R>>t;
+        ll ans = 0 ;
 
+        for(int j=  L  ;j<=R  ; j++){
+            t = max( t, Start[j] ) + process[j];
+            ans += max( 0 , t - End[j] );
+        }
+
+        cout<<ans<<"\n";
         
     }
 
