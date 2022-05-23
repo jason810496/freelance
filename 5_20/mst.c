@@ -130,8 +130,9 @@ int main(int argc, char *argv[])
 
 Graph *graphInit(int vertices)
 {
-	Graph *graph = malloc(sizeof(Graph));
-	graph->adjLists = malloc(vertices * sizeof(node *));
+	// fix malloc error
+	Graph *graph = (Graph*)malloc(sizeof(Graph));
+	graph->adjLists = (node**)malloc(vertices * sizeof(node *));
 	int i;
 	for (i = 0; i < vertices; i++)
 	{
@@ -149,7 +150,7 @@ void addEdge(Graph *graph, int i, int j,int cost)
 
 node *createNode(int v,int cost)
 {
-	node *newNode = malloc(sizeof(node));
+	node *newNode = (node*)malloc(sizeof(node));
 	newNode->vertex = v;
 	newNode->cost = cost;
 	newNode->next = NULL;
