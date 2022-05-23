@@ -118,6 +118,19 @@ int main(int argc, char *argv[])
 	    visited[i] = 0;
 	}
 
+	// debug
+
+	printf("debug : \n");
+
+	for(int i=0;i<n;i++){
+		node *adj = graph->adjLists[i];
+		printf( " %d : " ,i);
+		for(int j=0;j<getSize(graph,i) ;j++){
+			printf( "%d ", adj[j].vertex );
+		}
+		printf("\n");
+	}
+
     //prim gogo~
 	for (i = 0; i < n ;i++)
 	{
@@ -154,6 +167,8 @@ node *createNode(int v,int cost)
 	newNode->vertex = v;
 	newNode->cost = cost;
 	newNode->next = NULL;
+
+	return newNode;
 }
 
 int getSize(Graph *graph, int v)
