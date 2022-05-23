@@ -37,6 +37,8 @@ struct Graph
   node **adjLists;
 };
 
+int Size = 0 ;
+
 struct  mst{
 	int	start;
 	int	end;
@@ -44,7 +46,7 @@ struct  mst{
 };
 
 mst pq[MAX];//Priority Queue
-int pqIndex = -1;
+int pqIndex = 0;
 int *visited;
 
 //Prim's Algorithm using adjacency list
@@ -97,15 +99,17 @@ int main(int argc, char *argv[])
 	e = (mst *)malloc(sizeof(mst)*(m+1));
     Graph *graph = graphInit(n);
 
+	// Graph size
+	Size = n;
+
+	int st , ed , wt ;
 	for (i = 1; i <= m; i++) {
 		ptr = &(e[i]);
-		fscanf(fin, "%d, %d, %d", , , ); //從txt讀入邊的資料
-		printf("edge[%3d]: start = %3d, end = %3d, cost = %3d\n", i, , , );//將讀入的邊印出
+		fscanf(fin, "%d, %d, %d", &st, &ed , &wt); //從txt讀入邊的資料
+		printf("edge[%3d]: start = %3d, end = %3d, cost = %3d\n", i, st, ed , wt );//將讀入的邊印出
 		
-		/*完成以下呼叫-將邊加入圖
-        addEdge( , , , );
-        addEdge( , , , );
-		*/
+        addEdge( graph , st , ed , wt );
+        addEdge( graph , ed , st , wt );
 	}
 
  	visited = (int *)malloc(sizeof(int) * n);
@@ -160,6 +164,9 @@ int getSize(Graph *graph, int v)
 		/*
 		完成尋訪串列並紀錄此串列的長度
 		*/
+
+		temp= temp->next;
+		count++;
 	}
 	return count;
 }
@@ -174,6 +181,8 @@ node *getNode(Graph *graph, int v, int index)
 	    count++;
 	}
 	//完成 將找到的頂點回傳
+
+	return temp ;
 }
 
 void visit(Graph *graph, int v) {
@@ -187,10 +196,12 @@ void visit(Graph *graph, int v) {
 	for (j = 0; j < m; j++)
 	{
         node *vv = getNode(graph, v, j);
-        if (!visited[]) //完成此判斷句
+        if (!visited[j]) //完成此判斷句
         {
             mst e = {v, vv->vertex, vv->cost};
            //完成將此條邊加入pq
+
+		   enqueue( e );
         }
     }
 }
@@ -216,15 +227,13 @@ void prim(Graph *graph, int v)
 }
 
 int isEmpty(){
-	/*
-	完成此函數
-	*/
+	
+	return pqIndex<=0 ;
 }
 
 int isFull(){
-	/*
-	完成此函數
-	*/
+
+	return pqIndex>= (Size-1) ;
 }
 
 void enqueue(mst e)
@@ -245,13 +254,13 @@ int peek()
 	
     for (int i = 0; i <= pqIndex; i++) 
     { 
-        if (minCost == pq[i].cost && edge > -1) 
+        if (minCost == pq[i].cost && edge > -1) // choose bigger edge
         {
-            minCost = pq[i].edge;
+            minCost = pq[i].cost;
             edge = i;
         }
         else if (minCost > pq[i].cost) {
-            minCost = pq[i].edge;
+            minCost = pq[i].cost;
             edge = i;
         }
     }
@@ -273,6 +282,8 @@ mst dequeue()
             pq[i] = pq[i + 1];
         }
 		//完成從pq移除最小邊
+
+		pqIndex--;
     }
 
 	return e;
