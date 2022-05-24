@@ -43,16 +43,25 @@ void List_Pop(List *self ){
 
 struct Graph{
     List *adj;
+    int *visited;
+    int Size;
 };
 
 
 /*  Graph */
 void Graph_Init(Graph *G,int n){
-    G->adj = (List*)malloc( n*sizeof(List));
 
+    G->adj = (List*)malloc( n*sizeof(List));
     for(int i=0;i<n;i++){
         Resize( &G->adj[i] , n);
     }
+
+    G->visited = (int*)malloc( n*sizeof(int) );
+    for (int i = 0; i < n; i++){
+	    G->visited[i] = 0;
+	}
+
+    G->Size = n ;
 }
 
 void addEdge(Graph *G,int u, int v ,int wt){
@@ -131,3 +140,5 @@ void PQ_Pop(PQ *self){
     List_Pop(&self->arr);
     Heap_Down(self,0);
 }
+
+/* Data Structure Finish */
