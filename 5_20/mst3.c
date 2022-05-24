@@ -34,10 +34,16 @@ struct node
 
 struct Graph
 {
-  node **adjLists;
+  node *adjLists;
 };
 
 int Size = 0 ;
+
+struct List{
+    int val;
+    struct List* nxt;
+};
+
 
 struct  mst{
 	int	start;
@@ -51,10 +57,11 @@ int *visited;
 
 //Prim's Algorithm using adjacency list
 node *createNode(int,int);
-Graph *graphInit(int);
+Graph graphInit(int);
+// c sytle pass by reference 
 void addEdge(Graph *graph, int, int ,int);
 int getSize(Graph *graph, int);
-node *getNode(Graph *graph, int, int);
+node getNode(Graph *graph, int, int);
 void visit(Graph *graph, int);
 void prim(Graph *graph, int);
 
@@ -97,7 +104,7 @@ int main(int argc, char *argv[])
 	printf("nodes = %3d, edges = %3d\n", n, m);
 	
 	e = (mst *)malloc(sizeof(mst)*(m+1));
-    Graph *graph = graphInit(n);
+    Graph graph = graphInit(n);
 
 	// Graph size
 	Size = n;
@@ -108,8 +115,8 @@ int main(int argc, char *argv[])
 		fscanf(fin, "%d, %d, %d", &st, &ed , &wt); //從txt讀入邊的資料
 		printf("edge[%3d]: start = %3d, end = %3d, cost = %3d\n", i, st, ed , wt );//將讀入的邊印出
 		
-        addEdge( graph , st , ed , wt );
-        addEdge( graph , ed , st , wt );
+        addEdge( &graph , st , ed , wt );
+        addEdge( &graph , ed , st , wt );
 	}
 
  	visited = (int *)malloc(sizeof(int) * n);
@@ -124,11 +131,12 @@ int main(int argc, char *argv[])
 	printf("debug : \n");
 
 	for(int i=0;i<n;i++){
-		node *adj = graph->adjLists[i];
+		node adj = graph.adjLists[i];
 		printf( " %d : " ,i);
-		for(int j=0;j<getSize(graph,i) ;j++){
-			printf( "%d ", adj->vertex );
-			adj = adj->next;
+		printf( " size : %d\n" ,getSize(&graph,i) );
+		for(int j=0;j<getSize(&graph,i) ;j++){
+			printf( "%d ", adj.vertex );
+			adj = *adj.next;
 		}
 		printf("\n");
 	}
@@ -136,39 +144,43 @@ int main(int argc, char *argv[])
     //prim gogo~
 	for (i = 0; i < n ;i++)
 	{
-		if(!visited[i]) prim(graph, i);
+		if(!visited[i]) prim(&graph, i);
 	}	
     fclose(fin);
     return 0;
 }
 
 
-Graph *graphInit(int vertices)
+Graph graphInit(int vertices)
 {
 	// fix malloc error
-	Graph *graph = (Graph*)malloc(sizeof(Graph));
-	graph->adjLists = (node**)malloc(vertices * sizeof(node *));
+	// Graph *graph = (Graph*)malloc(sizeof(Graph));
+	Graph graph;
+	graph.adjLists = (node*)malloc(vertices * sizeof(node ));
 	int i;
-	for (i = 0; i < vertices; i++)
-	{
-    	graph->adjLists[i] = NULL;
-	}
+	// for (i = 0; i < vertices; i++)
+	// {
+    // 	graph->adjLists[i] = NULL;
+	// }
 	return graph;
 }
 
 void addEdge(Graph *graph, int i, int j,int cost)
 {
-	// node *newNode = 
-	
 
-	node * cur = graph->adjLists[i];
-	
+	node* cur = &graph->adjLists[i];
 	while( cur ){
-		cur = graph->adjLists[i]->next;
+		cur = cur->next;
 	}
-	cur = createNode(j, cost);
 
-	// newNode->next = cur ;
+	// cur.next = createNode(j, cost);
+
+	cur = (node*)malloc(sizeof(node));
+
+	cur->cost = cost;
+	cur->vertex = j ;
+
+	printf( " new node : %d\n" ,cur->vertex );
 }
 
 node *createNode(int v,int cost)
@@ -184,26 +196,26 @@ node *createNode(int v,int cost)
 int getSize(Graph *graph, int v)
 {
 	int count = 0;
-	node *temp = graph->adjLists[v];
-	while(temp)
+	node temp = graph->adjLists[v];
+	while(temp.next)
 	{
 		/*
 		完成尋訪串列並紀錄此串列的長度
 		*/
 
-		temp= temp->next;
+		temp= *( temp.next );
 		count++;
 	}
 	return count;
 }
 
-node *getNode(Graph *graph, int v, int index)
+node getNode(Graph *graph, int v, int index)
 {
 	int count = 0;
-	node *temp = graph->adjLists[v];
+	node temp = graph->adjLists[v];
 	while (count < index)
 	{
-	    temp = temp->next;
+	    temp = * ( temp.next );
 	    count++;
 	}
 	//完成 將找到的頂點回傳
@@ -221,10 +233,10 @@ void visit(Graph *graph, int v) {
 	int m = getSize(graph, v);
 	for (j = 0; j < m; j++)
 	{
-        node *vv = getNode(graph, v, j);
+        node vv = getNode(graph, v, j);
         if (!visited[j]) //完成此判斷句
         {
-            mst e = {v, vv->vertex, vv->cost};
+            mst e = {v, vv.vertex, vv.cost};
            //完成將此條邊加入pq
 
 		   enqueue( e );
