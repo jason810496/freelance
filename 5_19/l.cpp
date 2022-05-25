@@ -16,43 +16,22 @@ typedef pair<int,int> pii;
 const int MAX_N = 500005;
 const int INF = 1e9;
 
-
-// AC
-int arr[105];
-int n ; 
-
-bool check(int idx){
-    int x= arr[idx--];
-
-    while( idx >=0 && x){
-        x-=(x/arr[idx])*arr[idx];
-        idx--;
-    }
-
-    return x==0;
-}
 signed main(){
     OAO
-    
-    int t; cin>>t;
-    
+    int Start , Target ,Stair ;
+    int move,capacity,open;
+    int People[3];
+    cin>>Start>>Target>>move>>capacity>>open>>Stair;
 
-    while(t--){
-        cin>>n;
+    for(int i=0;i<3;i++) cin>>People[i];
 
-        for(int i=0;i<n;i++) cin>>arr[i];
+    int span = abs( Start- Target );
 
-        bool flag = true;
-        for(int i=n-1;i>0 ;i--){
-            if( !check(i) ){
-                flag = false;
-                break;
-            }
-        }
+    vector<int> ans;
 
-        cout<<( flag ? "YES\n":"NO\n");
+    ans.push_back( span*Stair ); // move by stair
 
-    }
+    if( Start)
     return 0;
 }
 

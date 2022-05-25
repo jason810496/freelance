@@ -18,41 +18,33 @@ const int INF = 1e9;
 
 
 // AC
-int arr[105];
-int n ; 
 
-bool check(int idx){
-    int x= arr[idx--];
 
-    while( idx >=0 && x){
-        x-=(x/arr[idx])*arr[idx];
-        idx--;
+ll C(int x,int y){
+    int y2 = x-y;
+    y = min ( y ,y2 );
+
+    ll Top =1 , Base = 1;
+    ll T = x;
+    ll B = 1;
+    while( y--){
+        Base*=B++;
+        Top*=T--;
     }
 
-    return x==0;
+    return Top / Base ;
 }
 signed main(){
     OAO
-    
-    int t; cin>>t;
-    
+    int n ,  m ;
+    ll k;
+    cin>>n>>m>>k;
+    // n members
+    // k different lock 
+    // reach security level m
 
-    while(t--){
-        cin>>n;
+    cout<<( C(n,m-1)<=k ? "YES":"NO" );
 
-        for(int i=0;i<n;i++) cin>>arr[i];
-
-        bool flag = true;
-        for(int i=n-1;i>0 ;i--){
-            if( !check(i) ){
-                flag = false;
-                break;
-            }
-        }
-
-        cout<<( flag ? "YES\n":"NO\n");
-
-    }
     return 0;
 }
 
