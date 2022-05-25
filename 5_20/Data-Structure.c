@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<limits.h>
+#include<string.h>
 
 typedef struct Pair Pair;
 typedef struct List List;
@@ -20,32 +21,73 @@ struct Pair{
 
 
 struct List{
-    int Size,idx;
+    int Cap,Size,idx;
     Pair *arr;
 };
 
+void Swap(void *a,void *b ,size_t t){
+    void *temp = malloc(t);
+
+    memcpy(temp,a,t);
+    memcpy(a,b,t);
+    memcpy(b,temp,t);
+}
+
 void List_Init(List *self){
-    self->idx=0;
-    self->Size=1;
+    self->idx=-1;
+    self->Size=0;
     self->arr = NULL;
 }
 
-void List_Resize(List *self,int n){
-    self->arr = (Pair*)malloc( n* sizeof(Pair ));
-    self->Size = n ;
+void List_Expand(List *self){
+    Pair temp[self->idx];
+    self->Cap = self->Size*2+10;
+
+    for(int i=0;i<self->Size;i++){
+        temp[i] = self->arr[i];
+    }
+    // copy old 
+
+    self->arr = (Pair*)malloc( self->Cap *sizeof(Pair) );
+
+    for(int i=0;i<self->Size;i++){
+        self->arr[i] = temp[i];
+    }
 }
 
-int List_Empty(List *self){
+void List_Resize(List *self,int n){
+
+    if( n < self->Cap ) return ;
+    
+    while( self->Cap < n ){
+        List_Expand( self );
+    }
+}
+
+int List_Size(List *self){
     return self->Size;
 }
 
 void List_Push(List *self,Pair e){
-    self->arr[ self->idx++ ] = e;
+    if( self->idx >= self->Size-1 ){
+        List_Expand( self );
+    }
+
+    self->arr[ ++self->idx ] = e;
     self->Size++;
+}
+
+Pair List_back(List *self){
+    return self->arr[ self->idx ];
+}
+
+Pair List_Front(List *self){
+    return self->arr[0];
 }
 
 void List_Pop(List *self ){
     self->idx--;
+    self->Size--;
 }
 
 struct Graph{
@@ -97,7 +139,8 @@ inline int PQ_Size(PQ *self){
 void Heap_Up(PQ *self,int i){
     
     if( i && self->arr.arr[ par(i) ].wt > self->arr.arr[i].wt ){
-        swap( self->arr.arr[i] , self->arr.arr[ par(i) ] );
+        // swap( self->arr.arr[i] , self->arr.arr[ par(i) ] );
+        Swap( &self->arr.arr[i] , &self->arr.arr[ par(i) ] , sizeof(self->arr.arr[i]) );
 
         Heap_Up( self , par(i) );
     }
@@ -115,7 +158,8 @@ void Heap_Down(PQ *self ,int i ){
     }
 
     if( largest!=i ){
-        swap( self->arr.arr[i] , self->arr.arr[largest] );
+        // swap( self->arr.arr[i] , self->arr.arr[largest] );
+        Swap( &self->arr.arr[i] , &self->arr.arr[largest] , sizeof( self->arr.arr[i] ) );
         Heap_Down( self , largest );
     }
 }
@@ -137,3 +181,27 @@ void PQ_Pop(PQ *self){
 }
 
 /* Data Structure Finish */
+
+
+int main(){
+    int n; 
+    scanf( "%d" , &n);
+
+    int x; 
+    PQ pq;
+
+    for(int i=0 ;i<n;i++){
+        scanf( "%d" , &x);
+        Pair p;
+        p.vertex =x;
+        p.wt =x ;
+        PQ_Push( &pq , p);
+    }
+
+    for(int i=0;i<n;i++){
+        Pair p = PQ_Top( &pq);
+        printf( "%d\n" , p.vertex );
+        PQ_Pop( &pq );
+    }
+    return 0 ;
+}
