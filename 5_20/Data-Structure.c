@@ -7,6 +7,13 @@ typedef struct List List;
 typedef struct PQ PQ;
 typedef struct Graph Graph;
 
+/* PQ define */
+#define par(i) (i-1)/2
+
+#define lc(i) i<<1+1
+
+#define rc(i) i<<1+2
+
 struct Pair{
     int vertex , wt;
 };
@@ -53,7 +60,7 @@ void Graph_Init(Graph *G,int n){
 
     G->adj = (List*)malloc( n*sizeof(List));
     for(int i=0;i<n;i++){
-        Resize( &G->adj[i] , n);
+        List_Resize( &G->adj[i] , n);
     }
 
     G->visited = (int*)malloc( n*sizeof(int) );
@@ -82,18 +89,6 @@ struct PQ{
     int Size;
     List arr;
 };
-
-inline int par(int i ){
-    return (i-1)/2;
-}
-
-inline int lc(int i){
-    return i<<1 + 1;
-}
-
-inline int rc(int i){
-    return i<<1 + 2;
-}
 
 inline int PQ_Size(PQ *self){
     return self->Size;
