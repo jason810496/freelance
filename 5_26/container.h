@@ -52,7 +52,7 @@ namespace CS52 {
         Container & operator =( const Container & ); // copy assignment
 
         // Overloaded stream insertion operator
-        friend std::ostream& operator<<( std::ostream & , Container &);
+        // friend std::ostream& operator<<( std::ostream & , Container &);
 
     private :
         int _size = 0;
@@ -92,7 +92,10 @@ CS52::Container::~ Container (){
 
 int& CS52::Container::at( int i ) const{
 
-    if (i < 0 || _size <= i) throw std::out_of_range("Out of Range!");
+    if (i < 0 || _size <= i){
+        throw std::out_of_range("Out of Range!");
+        // return ;
+    }
     return _data[ i ];
 }
 
@@ -113,7 +116,10 @@ bool CS52::Container::empty() const{
 }
 
 void CS52::Container::pop_back() {
-    if ( _size<=0) throw std::out_of_range("Out of Range!");
+    if ( _size<=0){
+        throw std::out_of_range("Out of Range!");
+        return;
+    }
     _size--;
 }
 
@@ -160,7 +166,10 @@ int CS52::Container::find( int key ){
 }
 
 int& CS52::Container::operator[](int i ){
-    if( i<0 || i>=_size ) throw std::out_of_range("Out of Range!");
+    if( i<0 || i>=_size ){
+        throw std::out_of_range("Out of Range!");
+        // return ;
+    }
     return _data[ i ];
 }
 
