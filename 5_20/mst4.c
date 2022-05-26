@@ -116,17 +116,17 @@ int main(int argc, char *argv[])
 
     // debug
 
-	printf("debug : \n");
+	// printf("debug : \n");
 
-	for(int i=0;i<n;i++){
-		node *adj = graph->adjLists[i];
-		printf( " %d , sz %d : " ,i,getSize(graph,i));
-		for(int j=0;j<getSize(graph,i) ;j++){
-			printf( "%d ", adj->vertex );
-			adj = adj->next;
-		}
-		printf("\n");
-	}
+	// for(int i=0;i<n;i++){
+	// 	node *adj = graph->adjLists[i];
+	// 	printf( " %d , sz %d : " ,i,getSize(graph,i));
+	// 	for(int j=0;j<getSize(graph,i) ;j++){
+	// 		printf( "%d ", adj->vertex );
+	// 		adj = adj->next;
+	// 	}
+	// 	printf("\n");
+	// }
 
 
     printf("\ngrowing spanning trees...\n");
@@ -226,7 +226,7 @@ void visit(Graph *graph, int v) {
 
     node *adj = graph->adjLists[ v ];
 
-    printf( " visit : %d \n" ,v );
+    // printf( " visit : %d \n" ,v );
     for(int j=0;j<m;j++){
         
         if( !visited[ adj->vertex ] ){
@@ -237,11 +237,11 @@ void visit(Graph *graph, int v) {
 
             enqueue( e );
 
-            printf(" enq : %d " , adj->vertex );
+            // printf(" enq : %d " , adj->vertex );
         }
 
         adj = adj->next ; 
-        printf(" \n" );
+        // printf(" \n" );
 
 
     }
@@ -249,27 +249,9 @@ void visit(Graph *graph, int v) {
 
 void prim(Graph *graph, int v)
 {
-    // debug
-
-	printf("debug : \n");
-
-	for(int i=0;i<Size;i++){
-		node *adj = graph->adjLists[i];
-		printf( " %d , sz %d : " ,i,getSize(graph,i));
-		for(int j=0;j<getSize(graph,i) ;j++){
-			printf( "%d ", adj->vertex );
-			adj = adj->next;
-		}
-		printf("\n");
-	}
 	
 	visit(graph, v);
     int weight = 0 ;
-
-    printf( "debug pq \n");
-    for(int i=0;i<=pqIndex;i++){
-        printf("i:%d ,st :%d ed: %d wt :%d\n" , i , pq[i].start , pq[i].end , pq[i].cost);
-    }
 
 	while (!isEmpty())
 	{
