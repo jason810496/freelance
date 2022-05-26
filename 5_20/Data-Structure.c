@@ -128,12 +128,11 @@ void addEdge(Graph *G,int u, int v ,int wt){
 
 /* PQ */
 struct PQ{
-    int Size;
     List arr;
 };
 
 inline int PQ_Size(PQ *self){
-    return self->Size;
+    return self->arr.Size;
 }
 
 void Heap_Up(PQ *self,int i){
@@ -148,19 +147,19 @@ void Heap_Up(PQ *self,int i){
 
 void Heap_Down(PQ *self ,int i ){
     int l = lc(i) , r = rc(i) ;
-    int largest = i;
+    int smallest = i;
 
-    if( l<= self->arr.idx && self->arr.arr[ l ].wt < self->arr.arr[ i ].wt ){
-        largest = l;
+    if( l< self->arr.Size && self->arr.arr[ l ].wt < self->arr.arr[ i ].wt ){
+        smallest = l;
     }
-    if( r<=self->arr.idx && self->arr.arr[ r ].wt < self->arr.arr[ i ].wt ){
-        largest = i;
+    if( r< self->arr.Size && self->arr.arr[ r ].wt < self->arr.arr[ i ].wt ){
+        smallest = i;
     }
 
-    if( largest!=i ){
+    if( smallest!=i ){
         // swap( self->arr.arr[i] , self->arr.arr[largest] );
-        Swap( &self->arr.arr[i] , &self->arr.arr[largest] , sizeof( self->arr.arr[i] ) );
-        Heap_Down( self , largest );
+        Swap( &self->arr.arr[i] , &self->arr.arr[smallest] , sizeof( self->arr.arr[i] ) );
+        Heap_Down( self , smallest );
     }
 }
 
@@ -180,28 +179,57 @@ void PQ_Pop(PQ *self){
     Heap_Down(self,0);
 }
 
+void PQ_Init(PQ *self){
+    List_Init( &self->arr);
+}
+
 /* Data Structure Finish */
 
+/* test DS */
 
-int main(){
-    int n; 
-    scanf( "%d" , &n);
+void List_test(){
+    int n ; 
+    scanf( "%d" , &n );
 
-    int x; 
-    PQ pq;
+    List arr;
+    List_Init(&arr);
+    List_Resize(&arr,n);
 
-    for(int i=0 ;i<n;i++){
-        scanf( "%d" , &x);
-        Pair p;
-        p.vertex =x;
-        p.wt =x ;
-        PQ_Push( &pq , p);
+    for(int i=0;i<n;i++){
+        scanf("%d" , &arr.arr[i].vertex );
     }
 
     for(int i=0;i<n;i++){
-        Pair p = PQ_Top( &pq);
-        printf( "%d\n" , p.vertex );
-        PQ_Pop( &pq );
+        printf( "%d " , arr.arr[i].vertex );
     }
+    printf( "\n" );
+}
+
+void Graph_test(){
+    int n,q;
+    scanf( "%d%d" , &n, &q);
+
+    int u,v,w;
+
+    Graph G;
+    Graph_Init(&G , n );
+
+    while(q--){
+        scanf("%d%d%d" , &u, &v ,&w );
+        addEdge(&G , u,v,w);
+        addEdge(&G , v,u,w);
+    }
+
+    for(int i=0;i<n;i++){
+        printf(" %d : " , i);
+        for(int j=0;j<n;j++){
+            printf( "%d " , G.adj[i].arr[j].vertex );
+        }
+        printf("\n");
+    }
+}
+
+int main(){
+    List_test();
     return 0 ;
 }
