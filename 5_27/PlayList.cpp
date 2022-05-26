@@ -67,6 +67,7 @@ void PlayList::insert(Song sng, unsigned int pos){
 // Let n be the number of nodes in the playlist
 // Runtime=O(n)
 // The method uses while loop to find the node to be removed
+// find bug !
 Song PlayList::remove(unsigned int pos){
   int i=1;
   PlayListNode* prev=head;
