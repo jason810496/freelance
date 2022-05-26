@@ -33,12 +33,12 @@ PlayList::~PlayList(){
    }
 }
 
-
+// fix bugs
 PlayList& PlayList::operator=(const PlayList & pl) {
-  // ~PlayList();
-  this->~PlayList();
-  PlayList lst = PlayList(pl);
-  return lst;
+  PlayListNode* h = this->head;
+  h = pl.head;
+
+  return *this;
 }
   // this->head=pl.head;
   // this->tail=pl.tail;
