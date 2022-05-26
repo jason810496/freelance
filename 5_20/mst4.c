@@ -46,7 +46,7 @@ struct  mst{
 };
 
 mst pq[MAX];//Priority Queue
-int pqIndex = 0;
+int pqIndex = -1;
 int *visited;
 
 //Prim's Algorithm using adjacency list
@@ -111,29 +111,10 @@ int main(int argc, char *argv[])
         addEdge( graph , st , ed , wt );
         addEdge( graph , ed , st , wt );
 
-        // debug
-        printf("debug : \n");
-
-        for(int i=0;i<n;i++){
-            node *adj = graph->adjLists[i];
-            printf( " %d , sz %d : " ,i,getSize(graph,i));
-            for(int j=0;j<getSize(graph,i) ;j++){
-                printf( "%d ", adj->vertex );
-                adj = adj->next;
-            }
-            printf("\n");
-        }
-
 	}
 
- 	visited = (int *)malloc(sizeof(int) * n);
 
-	for (i = 0; i < n; i++)
-	{
-	    visited[i] = 0;
-	}
-
-	// debug
+    // debug
 
 	printf("debug : \n");
 
@@ -147,10 +128,23 @@ int main(int argc, char *argv[])
 		printf("\n");
 	}
 
+
+    printf("\ngrowing spanning trees...\n");
     //prim gogo~
+
+ 	visited = (int *)malloc(sizeof(int) * n);
+
+	for (i = 0; i < n; i++)
+	{
+	    visited[i] = 0;
+	}
+
+    
 	for (i = 0; i < n ;i++)
 	{
-		if(!visited[i]) prim(graph, i);
+		if(!visited[i]){
+            prim(graph, i);
+        }
 	}	
     fclose(fin);
     return 0;
@@ -192,29 +186,6 @@ void addEdge(Graph *graph, int i, int j,int cost)
 	node **cur = &graph->adjLists[i];
 	
     Create( cur,j,cost);
-	// while( temp ){
-	// 	temp = graph->adjLists[i]->next;
-    //     printf("t\n");
-	// }
-    // printf("create\n");
-	// // *cur = createNode(j, cost);
-
-    // temp = (node*)malloc(sizeof(node));
-	// (temp)->vertex = j;
-	// (temp)->cost = cost;
-	// (temp)->next = NULL;
-
-	// newNode->next = cur ;
-}
-
-node *createNode(int v,int cost)
-{
-	node *newNode = (node*)malloc(sizeof(node));
-	newNode->vertex = v;
-	newNode->cost = cost;
-	newNode->next = NULL;
-
-	return newNode;
 }
 
 int getSize(Graph *graph, int v)
@@ -224,10 +195,6 @@ int getSize(Graph *graph, int v)
     temp = graph->adjLists[v];
 	while(temp)
 	{
-		/*
-		完成尋訪串列並紀錄此串列的長度
-		*/
-
 		temp= temp->next;
 		count++;
 	}
@@ -254,26 +221,56 @@ void visit(Graph *graph, int v) {
 	並將此頂點相鄰的邊加入pq
 	*/
 	visited[v] = 1;
-	int j;
-	int m = getSize(graph, v);
-	for (j = 0; j < m; j++)
-	{
-        node *vv = getNode(graph, v, j);
-        if (!visited[j]) //完成此判斷句
-        {
-            mst e = {v, vv->vertex, vv->cost};
-           //完成將此條邊加入pq
 
-		   enqueue( e );
+	int m = getSize(graph, v);
+
+    node *adj = graph->adjLists[ v ];
+
+    printf( " visit : %d \n" ,v );
+    for(int j=0;j<m;j++){
+        
+        if( !visited[ adj->vertex ] ){
+            mst e;
+            e.start = v;
+            e.end = adj->vertex;
+            e.cost = adj->cost;
+
+            enqueue( e );
+
+            printf(" enq : %d " , adj->vertex );
         }
+
+        adj = adj->next ; 
+        printf(" \n" );
+
+
     }
 }
 
 void prim(Graph *graph, int v)
 {
-	printf("\ngrowing spanning trees...\n");
+    // debug
+
+	printf("debug : \n");
+
+	for(int i=0;i<Size;i++){
+		node *adj = graph->adjLists[i];
+		printf( " %d , sz %d : " ,i,getSize(graph,i));
+		for(int j=0;j<getSize(graph,i) ;j++){
+			printf( "%d ", adj->vertex );
+			adj = adj->next;
+		}
+		printf("\n");
+	}
+	
 	visit(graph, v);
-    int weight;
+    int weight = 0 ;
+
+    printf( "debug pq \n");
+    for(int i=0;i<=pqIndex;i++){
+        printf("i:%d ,st :%d ed: %d wt :%d\n" , i , pq[i].start , pq[i].end , pq[i].cost);
+    }
+
 	while (!isEmpty())
 	{
 		mst e = dequeue();
@@ -285,6 +282,8 @@ void prim(Graph *graph, int v)
 		
         if (!visited[v]) visit(graph, v);
         if (!visited[w]) visit(graph, w);
+
+        weight+=e.cost ;
 	}
     printf("total cost: %d ", weight);//印出此生成樹總成本
 }
@@ -317,7 +316,7 @@ int peek()
 	
     for (int i = 0; i <= pqIndex; i++) 
     { 
-        if (minCost == pq[i].cost && edge > -1) // choose bigger edge
+        if (minCost == pq[i].cost ) // choose bigger edge
         {
             minCost = pq[i].cost;
             edge = i;
@@ -341,6 +340,7 @@ mst dequeue()
         e.start = pq[edge].start;
         e.end = pq[edge].end;
         e.cost = pq[edge].cost;
+
         for (int i = edge; i < pqIndex; i++) {
             pq[i] = pq[i + 1];
         }
