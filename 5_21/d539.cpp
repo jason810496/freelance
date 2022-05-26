@@ -16,79 +16,99 @@ typedef pair<int,int> pii;
 const int MAX_N = 500005;
 const int INF = 1e9;
 
-int arr[MAX_N];
+/*
+    array version segment tree
+    ( 1-based index )
+    ( [Q_L , Q_R ] )
+    ( single position update)
 
-struct Node{
-    int val , L , R ; 
-    /*
-        val : value of current Node
-        L : left Range
-        R : Right Range
-    */
+*/
 
-    Node(int v=0 , int l=0 ,int r=0){
-        val=v, L=l , R=r;
-    }
-};
-
-
-Node Tree[MAX_N<<1]; // 2N size of array
-
-Node Merge(Node &Left , Node &Right ){
-
-    return Node( max( Left.val ,Right.val ) , Left.L , Right.R );
-        // return Node( max( Left.val ,Right.val ) ,min(Left.L,Right.R) , max(Left.R , Right.R) );
+// left child idx 
+inline int L_idx(int i){
+    return i<<1;
 }
 
-void Build(int n){
-    for(int i=0;i<n;i++){
-        Tree[ i+n ] = Node( arr[i] , i , i );
-    }
-
-    for(int i = n-1 ; i>0 ; i--){
-        // Merge Segment 
-        Tree[ i ] = Merge( Tree[ i<<1 ] , Tree[ i<<1|1 ] );
-    }
+// right child idx
+inline int R_idx(int i){
+    return i<<1|1;
 }
 
-// [ L, R ]
-int Query(int L,int R,int root){
-    int result = 0;
+int T[MAX_N<<2];
 
-    // out of range
-    if( Tree[ root ].R < L || Tree[ root ].L > R ) return -INF ;
-    // current segment in [ L,R ]
-    if( L<=Tree[ root ].L && Tree[ root ].R <= R ) return Tree[ root ].val ;
+void Build(int idx,int L,int R){
+    if(L==R){
+        cin>>T[ idx ];
+        return ;
+    }
 
-    int Mid = (L+R)>>1;
+    int mid = (L+R)>>1;
 
-    return max( Query( L , Mid , root<<1 ) , Query( Mid+1 , R , root<<1|1 ) );
+    Build( L_idx(idx) , L , mid );
+    Build( R_idx(idx) , mid+1,R );
+
+    // pull
+    T[ idx ] = max( T[ L_idx(idx) ] , T[ R_idx(idx) ] );
 }
 
-void Demo(){
-    int n ,q; 
+void Update(int idx,int L,int R ,int pos ,int val){
+    if( L==R ){
+        T[ idx ] = val;
+        return ;
+    }
+
+    int mid = (L+R)>>1;
+
+    // in left part
+    if( pos<= mid ){
+        Update( L_idx(idx) , L ,mid , pos ,val );
+    }
+    else{ // right part 
+        Update( R_idx(idx) , mid+1 , R , pos ,val );
+    }
+
+    // pull
+    T[ idx ] = max( T[ L_idx(idx) ] , T[ R_idx(idx) ] );
+}
+
+int Query(int idx,int L,int R,int Q_L ,int Q_R ){
+    // in current range
+    if( Q_L<=L && R<=Q_R ) return T[ idx ];
+    // out of range 
+    if( L>Q_R || R<Q_L ) return -INF;
+
+    // recursion down 
+    int mid = (L+R)>>1;
+
+    return max( Query(L_idx(idx) , L ,mid  ,Q_L , Q_R ) ,
+                Query(R_idx(idx) , mid+1 ,R ,Q_L ,Q_R )  );
+}
+
+signed main(){
+    OAO
+
+    int n ,q ; 
     cin>>n;
 
-    for(int i=0;i<n;i++) cin>>arr[i];
+    // for(int i=1;i<n;i++){
+    //     cin>>arr[i];
+    // }
 
-    Build(n);
+    // Build(1,1,n);
+
+    for(int i=1,x;i<=n;i++){
+        cin>>x;
+        Update(1,1,n,i,x);
+    }
 
     cin>>q;
 
-    int l ,r ;
-    while(q--){
-        cin>>l>>r;
-        l-- , r--;
-        if( l>r ) swap(l,r);
-        cout<<Query(l,r,1)<<'\n';
-    }
+    int L,R;
 
-    for( int i=0;i<n*2;i++ ){
-        cout<<i<<"  : "<<Tree[i].L<<' '<<Tree[i].R<<' '<<Tree[i].val<<'\n';
+    while(q--){
+        cin>>L>>R;
+        if( L>R) swap(L,R);
+        cout<<Query(1,1,n,L,R)<<'\n';
     }
-}
-int main(){
-    OAO
-    Demo();
     return 0;
 }
