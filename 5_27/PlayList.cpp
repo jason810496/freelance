@@ -47,7 +47,7 @@ PlayList& PlayList::operator=(const PlayList & pl) {
 // Runtime=O(n)
 // The method uses while loop to find the position in the playlist 
 
-void Helper(PlayListNode **node ,Song sng,int cnt){
+void Insert_Helper(PlayListNode **node ,Song sng,int cnt){
   if( !*node ){
     *node = new PlayListNode(sng);
     return ;
@@ -58,12 +58,12 @@ void Helper(PlayListNode **node ,Song sng,int cnt){
     *node = NewNode;
     return ;
   }
-  Helper( &(*node)->next,sng,cnt-1);
+  Insert_Helper( &(*node)->next,sng,cnt-1);
 }
 
 // fix insert bugs
 void PlayList::insert(Song sng, unsigned int pos){
-  Helper(&head,sng,pos);
+  Insert_Helper(&head,sng,pos);
   
 }
 
@@ -71,19 +71,20 @@ void PlayList::insert(Song sng, unsigned int pos){
 // Runtime=O(n)
 // The method uses while loop to find the node to be removed
 // find bug !
-Song PlayList::remove(unsigned int pos){
-  int i=0;
-  PlayListNode* prev=head;
-  PlayListNode* cur=head->next;
-  while(i!=pos){
-    cur=cur->next;
-    prev=prev->next;
-    i++;
+
+Song Remove_Hepler(PlayListNode **cur,int i){
+  if( !i ){
+    Song ret = (*cur)->song;
+    (*cur) = (*cur)->next;
+    return ret;
   }
-  Song ret=cur->song;
-  prev->next=cur->next;
-  delete[] cur;
-  return ret;
+
+  return Remove_Hepler( &(*cur)->next , i-1 );
+}
+
+Song PlayList::remove(unsigned int pos){
+
+ return Remove_Hepler( &head,pos);
 }
 
 // Let n be the number of nodes in the playlist
