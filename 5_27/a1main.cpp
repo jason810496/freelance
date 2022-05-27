@@ -29,11 +29,16 @@ int main() {
       getline(cin, artist);
       cout<<"Length: "<<endl;
       cin>>length;
-      cout<<"Position(1 to "<<lst.size()<<"): "<<endl;
+      // cout<<"Position(1 to "<<lst.size()<<"): "<<endl;
+      if( lst.size()==0 ) cout<<"Position (1): "<<endl;
+      else cout<<"Position(1 to "<<lst.size()+1<<"): "<<endl;
       cin>>position;
-      while(position<1&&position>lst.size()){
+      while(position<1 || position >lst.size()+1 ){
         cout<<"The input is invalid"<<endl;
-        cout<<"Position(1 to "<<lst.size()<<"): "<<endl;
+
+        if( lst.size()==0 ) cout<<"Position (1): "<<endl;
+        else cout<<"Position(1 to "<<lst.size()+1<<"): "<<endl;
+
         cin>>position;
       }
       lst.insert(Song(song_name, artist, length),position-1);
@@ -46,7 +51,7 @@ int main() {
       int position;
       cout<<"Position(1 to "<<lst.size()<<"): "<<endl;
       cin>>position;
-      while(position<1&&position>lst.size()){
+      while(position<1 || position>lst.size()+1 ){
         cout<<"The input is invalid"<<endl;
         cout<<"Position(1 to "<<lst.size()<<"): "<<endl;
         cin>>position;
@@ -62,7 +67,7 @@ int main() {
       int pos2;
       cout<<"Swap song at the position (1 to "<<lst.size()<<"): "<<endl;
       cin>>pos1;
-      while(pos1<1&&pos1>lst.size()){
+      while(pos1<1 || pos1>lst.size()){
         cout<<"The input is invalid"<<endl;
         cout<<"Swap song at the position (1 to "<<lst.size()<<"): "<<endl;
         cin>>pos1;
