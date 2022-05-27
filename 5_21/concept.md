@@ -274,15 +274,16 @@ void Update(int idx,int L,int R ,int pos ,int val){
 
 ## 例題
 
-[區間極值查詢]()
+[區間極值查詢](https://zerojudge.tw/ShowProblem?problemid=d539)
 
-[區間 XOR + 單點修改]()
+[區間 XOR + 單點修改](https://zerojudge.tw/ShowProblem?problemid=c651)
 
 
 
 ### Referece
 
 （ Baltic OI 2001: Mars Maps  ）
+
 https://www.oi.edu.pl/static/attachment/20110713/boi-2001.pdf
 
 https://web.ntnu.edu.tw/~algo/Sequence2.html#3
