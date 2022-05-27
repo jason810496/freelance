@@ -46,22 +46,25 @@ PlayList& PlayList::operator=(const PlayList & pl) {
 // Let n be the number of nodes in the playlist
 // Runtime=O(n)
 // The method uses while loop to find the position in the playlist 
+
+void Helper(PlayListNode **node ,Song sng,int cnt){
+  if( !*node ){
+    *node = new PlayListNode(sng);
+    return ;
+  }
+
+  if( !cnt ){
+    PlayListNode *NewNode = new PlayListNode(sng, *node);
+    *node = NewNode;
+    return ;
+  }
+  Helper( &(*node)->next,sng,cnt-1);
+}
+
+// fix insert bugs
 void PlayList::insert(Song sng, unsigned int pos){
-  if (head == NULL) {
-    head = new PlayListNode(sng);
-    tail = head;
-    return;
-  }
-  int i=0;
-  PlayListNode* prev=head;
-  PlayListNode* cur=head->next;
-  while(prev && i!=pos){
-    if(cur) cur=cur->next;
-    prev=prev->next;
-    i++;
-  }
-  PlayListNode* newNode=new PlayListNode(sng, cur);
-  prev->next=newNode;
+  Helper(&head,sng,pos);
+  
 }
 
 // Let n be the number of nodes in the playlist
@@ -69,7 +72,7 @@ void PlayList::insert(Song sng, unsigned int pos){
 // The method uses while loop to find the node to be removed
 // find bug !
 Song PlayList::remove(unsigned int pos){
-  int i=1;
+  int i=0;
   PlayListNode* prev=head;
   PlayListNode* cur=head->next;
   while(i!=pos){
@@ -123,7 +126,7 @@ Song PlayList::get(unsigned int pos)const{
 unsigned int PlayList::size()const{
   int ret=0;
   PlayListNode*cur=head;
-  while(cur!=NULL){
+  while(cur){
     ret++;
     cur=cur->next;
   }
