@@ -12,59 +12,47 @@ typedef pair<int,int> pii;
 const int INF = 1e9;
 const int N = 1005;
 
-vector<int> G[N];
-bitset<N> InStk;
+vector<int> G[N],G2[N];
+bitset<N> vis;
 
-int dfn[N] , Low[N] , Contract[N], Time , sccID;
+int dfn[N] , Low[N] , Contract[N] , sccID;
 stack<int> stk;
 
 void Init(int n){
     for(int i=1;i<=n;i++){
         dfn[i]=0;
         Low[i]=0;
+        Contract[ i ] =0;
         G[i].clear();
     }
-    InStk=0;
-    Time=1;
+    vis=0;
     sccID=0;
     while( stk.size() ) stk.pop();
 }
 
-void DFS(int cur, int par ){
-    cout<<cur<<'\n';
-    dfn[ cur ] = Low [ cur ] = Time++;
+void DFS(int cur){
+    vis[ cur ]=1;
+
+    for(int nxt : G[ cur ] ){
+        if( !vis[nxt] ) DFS(nxt);
+    }
 
     stk.push( cur );
-    InStk[cur]=1;
-
-    for(int nxt : G[cur] ){
-        if( nxt==par ) continue ;
-
-        if( !dfn[ nxt ] ){
-            DFS( nxt , cur );
-
-            // Low[cur] = min( Low[cur] , Low[nxt] );
-        }
-        if( InStk[ nxt ] ){
-            Low[ cur ] = min( Low[cur] , Low[ nxt ] );
-        }
-    }
-
-    if( dfn[ cur ] == Low[ cur ] ){
-        int x;
-        do{
-            x=stk.top();
-            InStk[ x ] = 0;
-            Contract[ x ] = sccID;
-
-        }while( x!=cur);
-
-        sccID++;
-    }
 }
 
+
+void DFS2(int cur ,int k ){
+    if( Contract[ cur ] ) return;
+
+    Contract[ cur ] = k;
+
+    for(int nxt:G2[cur] ){
+        DFS2( nxt , k );
+    }
+}
 signed main(){
 
+    OAO
     int n  , m ;
 
     while(cin>>n>>m){
@@ -76,14 +64,34 @@ signed main(){
             cin>>u>>v>>d;
             if(d==1){
                 G[u].push_back(v);
+                G2[ v ].push_back( u );
             }
             else if(d==2){
                 G[u].push_back(v);
                 G[v].push_back(u);
+                G2[ v ].push_back( u );
+                G2[ u ].push_back( v );
             }
         }
-        DFS( 1,0 );
-        cout<<( sccID >0 ? 1:0)<<'\n';
+        
+        for(int i=1;i<=n;i++){
+            if( !vis[i] ) DFS(i);
+        }
+
+        while( stk.size() ){
+            if( !Contract[ stk.top() ] ){
+                DFS2( stk.top() , ++sccID );
+            }
+            stk.pop();
+        }
+
+        // for(int i=1;i<=n;i++){
+        //     cout<<Contract[i]<<' ';
+        // }
+        // cout<<"\n";
+
+        cout<<(sccID>1 ? 0:1)<<'\n';
+
     }
 
     return 0;
