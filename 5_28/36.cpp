@@ -15,7 +15,7 @@ const int N = 1005;
 vector<int> G[N],G2[N];
 bitset<N> vis;
 
-int dfn[N] , Low[N] , Contract[N] , sccID;
+int dfn[N] , Low[N] , Contract[N] , sccID , Time;
 stack<int> stk;
 
 void Init(int n){
@@ -27,6 +27,7 @@ void Init(int n){
     }
     vis=0;
     sccID=0;
+    Time=0;
     while( stk.size() ) stk.pop();
 }
 
@@ -75,7 +76,9 @@ signed main(){
         }
         
         for(int i=1;i<=n;i++){
-            if( !vis[i] ) DFS(i);
+            if( !vis[i] ){
+                DFS(i);
+            }
         }
 
         while( stk.size() ){
@@ -84,11 +87,6 @@ signed main(){
             }
             stk.pop();
         }
-
-        // for(int i=1;i<=n;i++){
-        //     cout<<Contract[i]<<' ';
-        // }
-        // cout<<"\n";
 
         cout<<(sccID>1 ? 0:1)<<'\n';
 
