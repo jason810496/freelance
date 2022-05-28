@@ -12,49 +12,78 @@ typedef pair<int,int> pii;
 const int INF = 1e9;
 const int N = 1005;
 
-int n  , m ;
+vector<int> G[N];
+bitset<N> InStk;
 
-vector< vector<int> > G;
+int dfn[N] , Low[N] , Contract[N], Time , sccID;
+stack<int> stk;
 
-int P[N],Sz[N],Group;
-
-void Init(){
+void Init(int n){
     for(int i=1;i<=n;i++){
-        P[i] = i;
-        Sz[i]=0;
+        dfn[i]=0;
+        Low[i]=0;
+        G[i].clear();
     }
-    G.resize(n+1);
-    G.clear();
+    InStk=0;
+    Time=1;
+    sccID=0;
+    while( stk.size() ) stk.pop();
 }
 
-inline int Find(int x){
-    return (P[x]==x ? x: P[x]=Find(x) );
-}
+void DFS(int cur, int par ){
+    cout<<cur<<'\n';
+    dfn[ cur ] = Low [ cur ] = Time++;
 
-void Union(int a,int b){
-    a=Find(a);
-    b=Find(b);
-    if( a==b ) return ;
-    
-    if( Sz[a] < Sz[b] ) swap(a,b);
+    stk.push( cur );
+    InStk[cur]=1;
 
-    Sz[a]+=Sz[b];
-    Sz[b]=0;
-    P[b]=a;
+    for(int nxt : G[cur] ){
+        if( nxt==par ) continue ;
+
+        if( !dfn[ nxt ] ){
+            DFS( nxt , cur );
+
+            // Low[cur] = min( Low[cur] , Low[nxt] );
+        }
+        if( InStk[ nxt ] ){
+            Low[ cur ] = min( Low[cur] , Low[ nxt ] );
+        }
+    }
+
+    if( dfn[ cur ] == Low[ cur ] ){
+        int x;
+        do{
+            x=stk.top();
+            InStk[ x ] = 0;
+            Contract[ x ] = sccID;
+
+        }while( x!=cur);
+
+        sccID++;
+    }
 }
 
 signed main(){
 
+    int n  , m ;
 
-    while(cin>>n>>m&&n&&m){
-        Init();
+    while(cin>>n>>m){
+        if( n==0 || m==0 ) return 0;
+        Init(n);
+
         int u , v, d;
         while(m--){
             cin>>u>>v>>d;
-            G[u].push_back(v);
-            if(d==2) G[v].push_back(u);
+            if(d==1){
+                G[u].push_back(v);
+            }
+            else if(d==2){
+                G[u].push_back(v);
+                G[v].push_back(u);
+            }
         }
-
+        DFS( 1,0 );
+        cout<<( sccID >0 ? 1:0)<<'\n';
     }
 
     return 0;
