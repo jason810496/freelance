@@ -18,23 +18,31 @@ struct IMetro {
 // [YOUR CODE WILL BE PLACED HERE] 
 
 
-
 #include<bits/stdc++.h>
 #define Vec std::vector
 #define Str std::string 
 #define Set std::set
 #define UMap std::unordered_map
+#define pii std::pair<int,int>
+#define F first 
+#define S second 
 
 class Metro : public IMetro{
     private :
         UMap< Str , int> Mp;
-        UMap< int ,Vec<int> > Graph;
-        UMap< int ,int > GroupID;
-        std::bitset<100005> vis=0;
-        UMap<int,Set<int> > Connection;
+        // UMap< int ,Vec<int> > Graph;
+        // UMap< int ,int > GroupID;
+        // UMap<int,Set<int> > Connection;
+        // std::bitset<100005> vis=0;
+
+        Vec<Vec<int> > Graph;
+        Vec<int> GroupID;
+        Vec<bool> vis;
+        Vec<pii> Edge;
         int G_ID=1;
-        int G_Size;
+        int N=1005;
         int cnt=0;
+        bool flag=false;
 
     public:
         void AddConnection(std::string station_name_a, std::string station_name_b) override;
@@ -61,6 +69,27 @@ class Metro : public IMetro{
             }
         }
 
+        void Init(){
+            flag = true;
+            // N = Mp.size();
+
+            Graph.resize( N );
+            vis.resize( N );
+            GroupID.resize( N );
+
+            for(pii &i:Edge){
+                Graph[i.F].push_back( i.S );
+                Graph[i.S].push_back( i.F );
+            }
+
+            for(int i=0;i<N;i++){
+                if( !vis[i] ){
+                    DFS(i);
+                    G_ID++;
+                }
+            }
+        }
+
 };
 
 
@@ -69,33 +98,32 @@ void Metro::AddConnection(std::string station_name_a, std::string station_name_b
 	int a=GetCode( station_name_a)  ,b=GetCode( station_name_b);
     if( a>b) std::swap(a,b);
 
-    Graph[a].push_back(b);
-    Graph[b].push_back(a);
-
-    Connection[a].insert(b);
+    Edge.push_back( {a,b} );
 }
 
-bool Metro::IsConnected(std::string station_name_a, std::string station_name_b)
-{
+bool Metro::IsConnected(std::string station_name_a, std::string station_name_b){
+    if( !flag ){
+        Init();
+    }
+
     int a=GetCode( station_name_a) , b=GetCode( station_name_b);
     if( a>b) std::swap(a,b);
 
-    return Connection[a].find(b)!=Connection[a].end();
+
+    for(int nxt :Graph[a] ){
+        if( nxt==b ) return true;
+    }
+    return false;
 }
 
 
 bool Metro::HasPath(std::string station_name_a, std::string station_name_b){
+    if( !flag ){
+        Init();
+    }
+
     int a=GetCode( station_name_a) , b=GetCode( station_name_b);
     if( a>b) std::swap(a,b);
-
-    if( !vis[a] || !vis[b]){
-        G_Size = Mp.size();
-
-        for(int i=0;i<G_Size;i++){
-            DFS(i);
-            G_ID++;
-        }
-    }
 
     return GroupID[ a ]==GroupID[ b ];
 }
@@ -109,8 +137,7 @@ Vec<Str> Metro::ShortestPath(std::string station_name_a, std::string station_nam
 Metro::~Metro()
 {
 }
-// --------------------------------------------------------------------------------------------
-
+// ---------------------------------------------------------------------
 // [YOUR CODE WILL BE PLACED HERE] 
 
 void Dump(const std::vector<std::string>&);
