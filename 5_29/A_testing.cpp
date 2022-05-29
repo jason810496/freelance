@@ -4,8 +4,8 @@
 // #include <algorithm> // For Test
 // #include <random>    // For Test
 
-#include<bits/stdc++.h>
 
+#include<bits/stdc++.h>
 struct IStringDatabase {
     virtual void Add(const std::string&) = 0;
     virtual bool Remove(const std::string&) = 0;
@@ -18,18 +18,22 @@ struct IStringDatabase {
 
 
 // [YOUR CODE WILL BE PLACED HERE]
-#define Alphabet_Size 60
+#include<bits/stdc++.h>
+#define UMap std::unordered_map
+#define F first 
+#define S second
 #define AAA 65
 /*
     Trie: Prefix Tree
     Application : words auto-complete using Trie
 */
 struct node{
-    int cnt;
-    node *child[Alphabet_Size];
+    bool isEnd = false;
+    // node *child[Alphabet_Size];
+    UMap<int,node*> child;
     node(){
-        cnt=0;
-        for(int i=0;i<Alphabet_Size;i++) child[i]=nullptr;
+        isEnd = false;
+        // for(int i=0;i<Alphabet_Size;i++) child[i]=nullptr;
     };
 };
 
@@ -66,7 +70,7 @@ void Insert(node *rt,const std::string &str){
         temp= temp->child[index];
     }
 
-    temp->cnt++;
+    temp->isEnd = true;
 
     // std::cout<<"Insert\n";
 }
@@ -75,17 +79,18 @@ void DFS(node *rt, std::string &cur, std::vector< std::string> &ans){
     // std::cout<<"dd\n";
     
     if( rt==nullptr ) return;
-    if( rt->cnt>0 ){
+    if( rt->isEnd ){
         ans.push_back( cur );
         // std::cout<<cur<<'\n';
         // return ;
     }
 
-    for(int i=0;i<Alphabet_Size;i++){
-        if( rt->child[i] ){
+    // for(int i=0;i<Alphabet_Size;i++){
+    for(auto &it:rt->child){
+        if( it.S ){
             // cur.push_back( char(i) );
-            cur+=char(i+AAA);
-            DFS(rt->child[i] ,cur,ans );
+            cur+=char(it.F+AAA);
+            DFS( it.S ,cur,ans );
             cur.pop_back();
         }
     }
@@ -104,76 +109,45 @@ bool check(node *root,const std::string &word){
         temp= temp->child[index];
     }
 
-    return temp->cnt>0;
+    return temp->isEnd;
 }
 
-node *check2(node *root,const std::string &word){
-    node *temp= root;
+std::vector<std::string> Search(node *rt,const std::string &str){
 
-    for(char ch: word){
+    std::vector< std::string > ans;
+
+    node *temp= rt;
+
+    for(char ch: str){
         int index=ch-AAA;
 
-        if(temp->child[index]==nullptr) return nullptr;
+        if(temp->child[index]==nullptr) return ans;
 
         temp= temp->child[index];
     }
 
-    return temp;
-}
+    std::string word =str;
 
-std::vector<std::string> Search(node *rt,const std::string &str){
-    node *temp = rt;
-
-    // std::cout<<"s "<<str<<"\n";
-
-    // std::cout<<"search"<<( check(temp,str) ? " YES \n": "NO\n");
-    // std::cout<<"search"<<( check(temp,str) ? " YES \n": "NO\n");
-
-    // bool flag = false ; 
-    // for(char ch:str){
-    //     int idx = ch='a';
-    //     if( temp->child[ idx ]==nullptr ){
-    //         flag = true;
-    //         break;
-    //     }
-    //     temp = temp->child[ idx ];
-    // }
-
-    // std::cout<<"ss "<<flag<<"\n";
-
-    std::vector< std::string > ans;
-
-    // if( flag ) return ans ;
-
-    // if( temp ) std::cout<<"OK\n";
-
-    // std::cout<<"aa\n";
-
-    std::string word = str;
-
-    DFS( check2( rt , str ) ,word,ans);
-    // DFS(  ,word,ans);
+    DFS( temp ,word,ans);
 
     return ans ;
 }
 
 void StringDatabase::Add(const std::string& a ){
-    if( check(root,a) ) return;
+    // if( check(root,a) ) return;
+
     Insert(root,a);
 }
 
 bool isEmpty(node *rt){
-    for(int i=0;i<Alphabet_Size;i++){
-        if( rt->child[ i ] ) return false;
-    }
-    return true;
+    return rt->child.empty();
 }
 
 node* Delete(node *root , const std::string &str,int dep=0){
     if( !root ) return nullptr;
     if( dep == str.size() ){
 
-        if( root->cnt > 0) root->cnt--;
+        if( root->isEnd) root->isEnd=false;
         if( isEmpty( root ) ){
             delete root;
             root=nullptr;
@@ -186,7 +160,7 @@ node* Delete(node *root , const std::string &str,int dep=0){
 
     root->child[ idx ] = Delete( root->child[ idx ] , str , dep+1 );
 
-    if( isEmpty(root) && root->cnt<=0 ){
+    if( isEmpty(root) && !root->isEnd ){
         delete root;
         root = nullptr;
     }
@@ -261,8 +235,21 @@ void Test1() {
 }
 
 void Test2() {
+    IStringDatabase&& db = StringDatabase();
+    db.Add("add");
+    db.Add("aabb");
+    db.Add("akeee");
+    db.Add("aabbccccccc");
+    db.Add("aabbccc");
+    db.Add("aa");
 
+    std::cout << "01) " << db.StartsWith("aa") << std::endl;
+    std::cout << "02) " << db.StartsWith("aab") << std::endl;
+    std::cout << "03) " << db.StartsWith("aabbcccc") << std::endl;
 
+    db.Remove("aa");
+    db.Remove("add");
+    std::cout << "04) " << db.StartsWith("a") << std::endl;
 
 }
 void Test3() {}
