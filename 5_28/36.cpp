@@ -15,7 +15,7 @@ const int N = 1005;
 vector<int> G[N],G2[N];
 bitset<N> vis;
 
-int dfn[N] , Low[N] , Contract[N] , sccID , Time;
+int dfn[N] , Low[N] , Contract[N] , sccID , Time ;
 stack<int> stk;
 
 void Init(int n){
@@ -31,26 +31,34 @@ void Init(int n){
     while( stk.size() ) stk.pop();
 }
 
-void DFS(int cur){
+void DFS(int cur ){
+    dfn[ cur ] = Low[ cur ] = ++Time ;
+    stk.push( cur );
     vis[ cur ]=1;
 
-    for(int nxt : G[ cur ] ){
-        if( !vis[nxt] ) DFS(nxt);
+    for(int nxt : G[cur] ){
+        if( !dfn[ nxt ] ){
+            DFS( nxt );
+            Low[ cur ] = min( Low[cur] , Low[nxt] );
+        }
+        else if( vis[ nxt ] ){
+            Low[ cur ] = min( Low[ cur ] , dfn[ nxt] );
+        }
     }
 
-    stk.push( cur );
-}
+    if( Low[ cur ] == Low[cur] ){
+        vis[ cur ]=0;
+        Contract[ cur ]= ++sccID;
 
-
-void DFS2(int cur ,int k ){
-    if( Contract[ cur ] ) return;
-
-    Contract[ cur ] = k;
-
-    for(int nxt:G2[cur] ){
-        DFS2( nxt , k );
+        while( stk.top()!=cur ){
+            Contract[ stk.top() ] = sccID;
+            vis[ stk.top() ] =0;
+            stk.pop();
+        }
+        stk.pop();
     }
 }
+
 signed main(){
 
     OAO
@@ -75,21 +83,31 @@ signed main(){
             }
         }
         
+        DFS(1);
+
+        bool flag = true;
+
         for(int i=1;i<=n;i++){
-            if( !vis[i] ){
-                DFS(i);
+            if( Low[i]!=1){
+                flag=false;
+                break;
             }
         }
 
-        while( stk.size() ){
-            if( !Contract[ stk.top() ] ){
-                DFS2( stk.top() , ++sccID );
-            }
-            stk.pop();
-        }
-
-        cout<<(sccID>1 ? 0:1)<<'\n';
-
+        // for(int i=1;i<=n;i++){
+        //     cout<<dfn[i]<<' ';
+        // }
+        // cout<<'\n';
+        // for(int i=1;i<=n;i++){
+        //     cout<<Low[i]<<' ';
+        // }
+        // cout<<'\n';
+        // for(int i=1;i<=n;i++){
+        //     cout<<Contract[i]<<' ';
+        // }
+        // cout<<'\n';
+        // cout<<(sccID>1 ? 0:1)<<'\n';
+        cout<<(flag ? 1:0)<<'\n';
     }
 
     return 0;
