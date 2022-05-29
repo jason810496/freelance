@@ -44,7 +44,7 @@ public :
     // void Insert(node *rt,const std::string &str);
     // std::vector< std::string> Search(node *rt,const std::string &str);
 
-    bool check(const std::string&){};
+    // bool check(const std::string&){};
 };
 
 
@@ -72,14 +72,17 @@ void Insert(node *rt,const std::string &str){
 void DFS(node *rt, std::string &cur, std::vector< std::string> &ans){
     std::cout<<"dd\n";
     
+    if( rt==nullptr ) return;
     if( rt->is_end ){
         ans.push_back( cur );
-        return ;
+        std::cout<<cur<<'\n';
+        // return ;
     }
 
     for(int i=0;i<Alphabet_Size;i++){
         if( rt->child[i] ){
-            cur.push_back( char(i) );
+            // cur.push_back( char(i) );
+            cur+=char(i);
             DFS(rt->child[i] ,cur,ans );
             cur.pop_back();
         }
@@ -87,7 +90,8 @@ void DFS(node *rt, std::string &cur, std::vector< std::string> &ans){
     
 }
 
-bool StringDatabase::check(const std::string &word){
+
+bool check(node *root,const std::string &word){
     node *temp= root;
 
     for(char ch: word){
@@ -101,37 +105,57 @@ bool StringDatabase::check(const std::string &word){
     return temp->is_end;
 }
 
+node *check2(node *root,const std::string &word){
+    node *temp= root;
+
+    for(char ch: word){
+        int index=ch-'a';
+
+        if(temp->child[index]==nullptr) return nullptr;
+
+        temp= temp->child[index];
+    }
+
+    return temp;
+}
+
 std::vector<std::string> Search(node *rt,const std::string &str){
     node *temp = rt;
 
-    std::cout<<"s1\n";
+    std::cout<<"s "<<str<<"\n";
 
-    bool flag = true ; 
-    for(char ch:str){
-        int idx = ch='a';
-        if( temp->child[ idx ]==nullptr ){
-            flag = false;
-            break;
-        }
-        temp = temp->child[ idx ];
-    }
+    std::cout<<"search"<<( check(temp,str) ? " YES \n": "NO\n");
+    // std::cout<<"search"<<( check(temp,str) ? " YES \n": "NO\n");
 
-    std::cout<<"ss\n";
+    // bool flag = false ; 
+    // for(char ch:str){
+    //     int idx = ch='a';
+    //     if( temp->child[ idx ]==nullptr ){
+    //         flag = true;
+    //         break;
+    //     }
+    //     temp = temp->child[ idx ];
+    // }
+
+    // std::cout<<"ss "<<flag<<"\n";
 
     std::vector< std::string > ans;
 
-    if( !flag ) return ans ;
+    // if( flag ) return ans ;
+
+    // if( temp ) std::cout<<"OK\n";
 
     std::cout<<"aa\n";
 
     std::string word = str;
 
-    DFS(temp,word,ans);
+    DFS( check2( rt , str ) ,word,ans);
 
     return ans ;
 }
 
 void StringDatabase::Add(const std::string& a ){
+    if( check(root,a) ) return;
     Insert(root,a);
 }
 
@@ -174,14 +198,23 @@ int main(){
     db.Add("Helloworld");
     db.Add("Hello");
     db.Add("Hi");
+    db.Add("adb");
+    db.Add("akc");
+    db.Add("arr");
+    db.Add("a");
+    db.Add("add");
 
     // std::cout << "01) " << db.StartsWith("Hello") << std::endl;
     // std::cout << "02) " << db.StartsWith("hello") << std::endl;
     // std::cout << "03) " << db.StartsWith("H") << std::endl;
 
-    std::cout << "01) " << db.check("Hello") << std::endl;
-    std::cout << "02) " << db.check("hello") << std::endl;
-    std::cout << "03) " << db.check("H") << std::endl;
+    std::cout << "01) " << db.StartsWith("Hello") << std::endl;
+    std::cout << "02) " << db.StartsWith("hello") << std::endl;
+    std::cout << "03) " << db.StartsWith("H") << std::endl;
+    std::cout << "03) " << db.StartsWith("add") << std::endl;
+    std::cout << "03) " << db.StartsWith("arr") << std::endl;
+    std::cout << "03) " << db.StartsWith("akc") << std::endl;
+    std::cout << "03) " << db.StartsWith("a") << std::endl;
 
     return 0;
 }
