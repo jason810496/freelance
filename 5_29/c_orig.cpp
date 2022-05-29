@@ -1,220 +1,114 @@
 
-// [YOUR CODE WILL BE PLACED HERE] 
+
 // --------------------------------------------------------------------------------------------
-#include <list>
-class Node ;
+#include<bits/stdc++.h>
 
-class Node
-{
-public :
-	int _isRun ;
-	std::string _name ;
-	std::list<Node*> _to ;
-	Node * _from ;
-public :
-	// add
-	void addNode( Node *node );
-	bool find(Node* node) const ;
-	Node( const std::string &name );
-	//
-	bool IsConnected( Node* to )const ;
 
-	void insert(  Node * node );
+struct IMetro {
+    virtual void AddConnection(std::string station_name_a, std::string station_name_b) = 0;
+    virtual bool IsConnected(std::string station_name_a, std::string station_name_b) = 0;
+    virtual bool HasPath(std::string station_name_a, std::string station_name_b) = 0;
+    virtual std::vector<std::string> ShortestPath(std::string station_name_a, std::string station_name_b) = 0;
+    virtual ~IMetro() {}
+};
 
+
+// [YOUR CODE WILL BE PLACED HERE] 
+
+
+
+
+#define Vec std::vector
+#define Str std::string 
+#define Set std::set
+#define UMap std::unordered_map
+#define pii std::pair<int,int>
+
+class Metro : public IMetro{
+    private :
+        UMap< Str , int> Mp;
+        UMap< int ,Vec<int> > Graph;
+        UMap< int ,int > GroupID;
+        std::bitset<100005> vis=0;
+        UMap<int,Set<int> > Connection;
+        Vec<pii> Edge;
+        int G_ID=1;
+        int G_Size;
+        int cnt=0;
+        bool flag;
+
+    public:
+        void AddConnection(std::string station_name_a, std::string station_name_b) override;
+        bool IsConnected(std::string station_name_a, std::string station_name_b) override;
+        bool HasPath(std::string station_name_a, std::string station_name_b) override;
+        std::vector<std::string> ShortestPath(std::string station_name_a, std::string station_name_b) override;
+        ~Metro() override;
+        Metro(){
+        }
+
+        inline int GetCode(const Str &s){
+
+            if( Mp.find(s)==Mp.end() ) Mp[ s ]=cnt++;
+
+            return Mp[ s ];
+        }
+
+        void DFS(int cur){
+            vis[ cur ]=1;
+            GroupID[ cur ] = G_ID;
+
+            for(int nxt : Graph[ cur ] ){
+                if( !vis[nxt] ) DFS( nxt );
+            }
+        }
+
+        void Init(){
+
+        }
 
 };
 
-bool Node::find(Node* node) const
-{
-	std::list<Node*>::const_iterator it ;
-	for( it = _to.begin() ; it != _to.end() ; it ++ )
-		if( (*it) == node )
-			return 1 ;
-	return 0 ;
-
-}
-
-void Node::insert(  Node * node )
-{
-	const std::string &name = node->_name ;
-	std::list<Node*>::const_iterator it ;
-	for( it = _to.begin() ; it != _to.end() ; it ++ )
-	{
-		if( (*it)->_name > name )
-		{
-			_to.insert( it , node );
-			return ;
-		}
-	}
-	_to.push_back( node );
-}
-//
-bool Node::IsConnected( Node* to )const
-{
-	for( const Node* d : _to )
-		if( to == d )
-			return true ;
-	return false; 
-}
-
-Node::Node( const std::string &name )
-{
-	_name = name ;
-}
-
-void Node::addNode( Node *node )
-{
-	insert( node );
-}
-
-class Metro : public IMetro
-{
-private :
-	std::list<Node*> _node ;
-	int _count ;
-private :
-	Node* findAndNew( const std::string name );
-public:
-	void AddConnection(std::string station_name_a, std::string station_name_b) override;
-	bool IsConnected(std::string station_name_a, std::string station_name_b) override;
-	bool HasPath(std::string station_name_a, std::string station_name_b) override;
-	std::vector<std::string> ShortestPath(std::string station_name_a, std::string station_name_b) override;
-	~Metro() override;
-	Metro();
-
-};
-Metro::Metro()
-{
-	_count = 0 ;
-}
-Node* Metro::findAndNew( const std::string name )
-{
-	std::list<Node*>::const_iterator it ;
-	for( it = _node.begin() ; it != _node.end() ; it ++ )
-		if( (*it)->_name == name )
-			return (*it);
-	Node* nn = new Node( name );
-	_node.push_back( nn );
-	_count ++ ; 
-	return nn ; 
-
-}
 
 void Metro::AddConnection(std::string station_name_a, std::string station_name_b)
 {
-	Node *a = findAndNew( station_name_a );
-	Node *b = findAndNew( station_name_b );
-	if( a->find( b ))
-		return ;
-	a->addNode( b );
-	b->addNode( a );
+	int a=GetCode( station_name_a)  ,b=GetCode( station_name_b);
+    if( a>b) std::swap(a,b);
+
+    Graph[a].push_back(b);
+    Graph[b].push_back(a);
+
+    Connection[a].insert(b);
 }
 
 bool Metro::IsConnected(std::string station_name_a, std::string station_name_b)
 {
-	Node *a = findAndNew( station_name_a );
-	if( a == NULL ) return false ; 
-	Node *b = findAndNew( station_name_b );
-	if( b == NULL ) return false ; 
-	return a->IsConnected( b );
-	/*
-	std::list<Node*>::iterator it ;
-	for( it = _node.begin() ; it != _node.end() ; it ++ )
-		(*it)->_isRun = 0 ;*/
+    int a=GetCode( station_name_a) , b=GetCode( station_name_b);
+    if( a>b) std::swap(a,b);
 
-
+    return Connection[a].find(b)!=Connection[a].end();
 }
 
 
-bool BFS( Node *from , Node *to , std::vector<std::string> *out )
-{
-	int i , k ;
-	Node * findNode ;
-	Node * nn = NULL ;
-	std::vector<Node*> buf ;
-	buf.push_back( to );
-	to->_isRun = 1 ;
-	to->_from = NULL ;
+bool Metro::HasPath(std::string station_name_a, std::string station_name_b){
+    int a=GetCode( station_name_a) , b=GetCode( station_name_b);
+    if( a>b) std::swap(a,b);
 
-	if( to == from )
-	{
-		if( out != NULL )
-			out->push_back( to->_name );
-		return true ;
-	}
-	
-	findNode = 0 ;
-	for( i = 0 ; i < buf.size() ; ++i )
-	{
-		nn = buf[i] ;
-		for( Node *next : nn->_to )
-		{
-			if( next->_isRun == 0 )
-			{
-				next->_isRun = 1 ;
-				next->_from = nn ;
-				buf.push_back( next );
-				if( from == next )
-				{
-					findNode = next ;
-					break ;
-				}
-			}
-		}
-		if( findNode != NULL ) break ;
+    if( !vis[a] || !vis[b]){
+        G_Size = Mp.size();
 
-	}
-	if( findNode == NULL  )
-		return 0 ;
-	//
-	if( out != NULL )
-	{
-		nn = findNode ;
-		while( nn != NULL )
-		{
-			out->push_back( nn->_name );
-			nn = nn->_from ;
-		}
+        for(int i=0;i<G_Size;i++){
+            DFS(i);
+            G_ID++;
+        }
+    }
 
-	}
-
-	return 1 ; 
-	
+    return GroupID[ a ]==GroupID[ b ];
 }
 
-
-
-bool Metro::HasPath(std::string station_name_a, std::string station_name_b)
+Vec<Str> Metro::ShortestPath(std::string station_name_a, std::string station_name_b)
 {
-	Node *a = findAndNew( station_name_a );
-	if( a == NULL ) return false ; 
-	Node *b = findAndNew( station_name_b );
-	if( b == NULL ) return false ; 
-
-	std::list<Node*>::iterator it ;
-	for( it = _node.begin() ; it != _node.end() ; it ++ )
-		(*it)->_isRun = 0 ;
-
-	return BFS( a , b , NULL );
-}
-
-std::vector<std::string> Metro::ShortestPath(std::string station_name_a, std::string station_name_b)
-{
-	std::vector<std::string> ret ; 
-	Node *a = findAndNew( station_name_a );
-	if( a == NULL ) return ret ; 
-	Node *b = findAndNew( station_name_b );
-	if( b == NULL ) return ret ;
-
-
-	std::list<Node*>::iterator it ;
-	for( it = _node.begin() ; it != _node.end() ; it ++ )
-		(*it)->_isRun = 0 ;
-
-
-	BFS( a , b , &ret );
-	return ret ;
-
+	Vec<Str> temp;
+    return temp;
 }
 
 Metro::~Metro()
