@@ -1,65 +1,86 @@
 
+
+
+// ----------------------------------------------
+#include<bits/stdc++.h>
+
+struct IStringDatabase {
+    virtual void Add(const std::string&) = 0;
+    virtual bool Remove(const std::string&) = 0;
+    virtual std::vector<std::string> StartsWith(const std::string& prefix) = 0;
+    virtual ~IStringDatabase() {}
+};
+
+// ---------------------------------------------
+
 // [YOUR CODE WILL BE PLACED HERE]
 
-#include <string.h>
-#include <list>
+struct Node{
+    Node *child[100];
+    bool isEnd = false;
+};
+
+struct Node *NewNode(){
+    struct Node *ret = new Node;
+    ret->isEnd = false;
+
+    for(int i=0;i<100;i++){
+        ret->child[i]= nullptr;
+    }
+    return ret;
+}
+
 class StringDatabase : public IStringDatabase
 {
 	//std::list<std::string> _list ;
-	std::vector<std::string> _vec ;
+	// std::vector<std::string> _vec ;
+
+    Node *root = NewNode();
+
+
 public :
 	void Add(const std::string&) ;
 	bool Remove(const std::string&) ;
 	std::vector<std::string> StartsWith(const std::string& prefix) ;
 	~StringDatabase();
+
+    void Insert(struct Node*rt ,const std::string &str);
 };
 
 
 
 // ----------------------------------------
-// 二次
-int binary_search(const std::vector<std::string> & arr , int start, int end, const std::string & key , int &outLeft  )
-{
-	int ret = -1;  
 
-	int mid = 0 ;
-	while (start <= end) 
-	{
-		mid = start + (end - start) / 2; 
-		if ( (arr[mid] )< key)
-			start = mid + 1;
-		else if ((arr[mid] )> key)
-			end = mid - 1;
-		else { 
-			ret = mid;  
-			break;
-		}
-	}
+void Insert(struct Node*rt ,const std::string &str){
+    struct Node *temp = rt;
 
-	outLeft = mid ;
+    for(char c : str){
+        int idx = c-'a';
+        if( !temp->child[ idx ] ) temp->child[ idx ] = NewNode();
+        
+        temp = temp->child[ idx ];
+    }
 
+    temp->isEnd = true;
 
-	return ret ;     
 }
+
+std::vector<std::string> Search( struct Node*rt ,const std::string &str){
+    struct Node *temp = rt;
+
+    for(char c : str){
+        int idx = c-'a';
+        if( !temp->child[ idx ] ) temp->child[ idx ] = NewNode();
+        
+        temp = temp->child[ idx ];
+    }
+
+    temp->isEnd = true;
+}
+
 void StringDatabase::Add(const std::string& a )
 {
-	// 是否重複
-	int left , ret ;
-	if( _vec.size() == 0 )
-	{
-		_vec.push_back( a );
-		return ; 
-	}
-	ret = binary_search( _vec , 0 , _vec.size() - 1 , a , left );
-	if( ret != -1 )
-		return ;
-	if( left >= 0 )
-	if( left < ( _vec.size() )) 
-	if( _vec[left] <= a)
-	{
-		left++;
-	}
-	_vec.insert( _vec.begin() + left , a );
+	Insert( root , a);
 
 }
 
