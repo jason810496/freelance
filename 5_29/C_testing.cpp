@@ -24,27 +24,19 @@ struct IMetro {
 #define Str std::string 
 #define Set std::set
 #define UMap std::unordered_map
-#define pii std::pair<int,int>
-#define F first 
-#define S second 
 
 class Metro : public IMetro{
     private :
         UMap< Str , int> Mp;
-        UMap< int ,Str > Mp_T;
-        // UMap< int ,Vec<int> > Graph;
-        // UMap< int ,int > GroupID;
-        // UMap<int,Set<int> > Connection;
-        // std::bitset<100005> vis=0;
-
-        Vec<Vec<int> > Graph;
-        Vec<int> GroupID;
-        Vec<bool> vis;
-        Vec<pii> Edge;
+        UMap< int , Str > Mp_T;
+        UMap< int ,Vec<int> > Graph;
+        UMap< int ,int > GroupID;
+        std::bitset<100005> vis=0;
+        UMap<int,Set<int> > Connection;
         int G_ID=1;
-        int N;
+        int G_Size;
         int cnt=0;
-        bool flag=false;
+        bool flag = true ;
 
     public:
         void AddConnection(std::string station_name_a, std::string station_name_b) override;
@@ -57,10 +49,9 @@ class Metro : public IMetro{
 
         inline int GetCode(const Str &s){
 
-            if( Mp.find(s)==Mp.end() ){
-                Mp[ s ]=cnt;
-                Mp_T[ cnt ] = s;
-                cnt++;
+            if( Mp.find(s)==Mp.end() ) {
+                Mp_T [cnt ] = s;
+                Mp[ s ]=cnt++;
             }
 
             return Mp[ s ];
@@ -69,6 +60,7 @@ class Metro : public IMetro{
         void DFS(int cur){
             vis[ cur ]=1;
             GroupID[ cur ] = G_ID;
+            flag = false;
 
             for(int nxt : Graph[ cur ] ){
                 if( !vis[nxt] ) DFS( nxt );
@@ -76,28 +68,12 @@ class Metro : public IMetro{
         }
 
         void Init(){
-            flag = true;
-            N = Mp.size();
-
-            Graph.resize( N , Vec<int>(N,0) );
-            vis.resize( N , 0 );
-            GroupID.resize( N );
-
-            for(pii &i:Edge){
-                Graph[i.F].push_back( i.S );
-                Graph[i.S].push_back( i.F );
+            vis=0;
+            G_Size=Mp.size();
+            G_ID=1;
+            for(int i=0;i<G_Size;i++){
+                if( !vis[i] ) DFS(i);
             }
-
-            for(int i=0;i<N;i++){
-                if( !vis[i] ){
-                    DFS(i);
-                    G_ID++;
-                }
-            }
-
-            // for(int i=0;i<N;i++){
-            //     std::cout<<i<<' '<<GroupID[i]<<'\n';
-            // }
         }
 
 };
@@ -108,40 +84,43 @@ void Metro::AddConnection(std::string station_name_a, std::string station_name_b
 	int a=GetCode( station_name_a)  ,b=GetCode( station_name_b);
     if( a>b) std::swap(a,b);
 
-    Edge.push_back( {a,b} );
+    Graph[a].push_back(b);
+    Graph[b].push_back(a);
+
+    Connection[a].insert(b);
+
+    flag = true ;
 }
 
-bool Metro::IsConnected(std::string station_name_a, std::string station_name_b){
-    if( !flag ){
-        Init();
-    }
-
+bool Metro::IsConnected(std::string station_name_a, std::string station_name_b)
+{
     int a=GetCode( station_name_a) , b=GetCode( station_name_b);
     if( a>b) std::swap(a,b);
-    if( a==b ) return false;
+    if( a==b ) return 0;
 
-
-    for(int nxt :Graph[a] ){
-        if( nxt==b ) return true;
-    }
-    return false;
+    return Connection[a].find(b)!=Connection[a].end();
 }
 
 
 bool Metro::HasPath(std::string station_name_a, std::string station_name_b){
-    if( !flag ){
+    if( flag ){
         Init();
     }
 
     int a=GetCode( station_name_a) , b=GetCode( station_name_b);
     if( a>b) std::swap(a,b);
-    if( a==b ) return true;
+    if( a==b ) return 1;
 
     return GroupID[ a ]==GroupID[ b ];
 }
 
 Vec<Str> Metro::ShortestPath(std::string station_name_a, std::string station_name_b)
 {
+
+    if( flag ){
+        Init();
+    }
+
 	Vec<int> ans;
     Vec<Str> ret; 
     
@@ -154,8 +133,8 @@ Vec<Str> Metro::ShortestPath(std::string station_name_a, std::string station_nam
         return ret;
     }
 
-    Vec<bool> V(N);
-    Vec<int> From(N);
+    Vec<bool> V( G_Size);
+    Vec<int> From( G_Size );
     bool flag = false;
 
     std::queue<int> q;
