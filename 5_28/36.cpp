@@ -13,7 +13,8 @@ const int INF = 1e9;
 const int N = 1005;
 
 vector<int> G[N],GT[N];
-bitset<N> vis;
+// bitset<N> vis;
+bool vis[N];
 
 // int dfn[N] , Low[N] , Contract[N] , sccID , Time ;
 // stack<int> stk;
@@ -24,8 +25,10 @@ void Init(int n){
         // Low[i]=0;
         // Contract[ i ] =0;
         G[i].clear();
+        GT[i].clear();
+        vis[i]=0;
     }
-    vis=0;
+    // vis=0;
     // sccID=0;
     // Time=0;
     // while( stk.size() ) stk.pop();
@@ -60,6 +63,7 @@ void Init(int n){
 // }
 
 void dfs(int cur,vector<int> *graph){
+    // cout<<cur<<' ';
     vis[cur]=1;
     for(int nxt : graph[cur] ){
         if( !vis[nxt] ) dfs(nxt, graph );
@@ -97,17 +101,18 @@ signed main(){
             if( !vis[i] ){
                 dfs(i,G);
                 cnt1++;
-                cout<<" cnt1"<<i<<'\n';
+                // cout<<" cnt1"<<i<<'\n';
             }
         }
 
-        vis=0;
+        // vis=0;
+        for(int i=1;i<=n;i++) vis[i]=0;
 
         for(int i=1;i<=n;i++){
             if( !vis[i] ){
                 dfs(i,GT);
                 cnt2++;
-                cout<<" cnt2"<<i<<'\n';
+                // cout<<" cnt2"<<i<<'\n';
             }
         }
 
