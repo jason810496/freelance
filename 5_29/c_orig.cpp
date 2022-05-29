@@ -17,7 +17,7 @@ struct IMetro {
 
 
 
-
+#include<bits/stdc++.h>
 #define Vec std::vector
 #define Str std::string 
 #define Set std::set
@@ -29,6 +29,7 @@ struct IMetro {
 class Metro : public IMetro{
     private :
         UMap< Str , int> Mp;
+        UMap< int ,Str > Mp_T;
         // UMap< int ,Vec<int> > Graph;
         // UMap< int ,int > GroupID;
         // UMap<int,Set<int> > Connection;
@@ -54,7 +55,11 @@ class Metro : public IMetro{
 
         inline int GetCode(const Str &s){
 
-            if( Mp.find(s)==Mp.end() ) Mp[ s ]=cnt++;
+            if( Mp.find(s)==Mp.end() ){
+                Mp[ s ]=cnt;
+                Mp_T[ cnt ] = s;
+                cnt++;
+            }
 
             return Mp[ s ];
         }
@@ -72,8 +77,8 @@ class Metro : public IMetro{
             flag = true;
             N = Mp.size();
 
-            Graph.resize( N );
-            vis.resize( N );
+            Graph.resize( N , Vec<int>(N,0) );
+            vis.resize( N , 0 );
             GroupID.resize( N );
 
             for(pii &i:Edge){
@@ -86,6 +91,10 @@ class Metro : public IMetro{
                     DFS(i);
                     G_ID++;
                 }
+            }
+
+            for(int i=0;i<N;i++){
+                std::cout<<i<<' '<<GroupID[i]<<'\n';
             }
         }
 
@@ -129,8 +138,51 @@ bool Metro::HasPath(std::string station_name_a, std::string station_name_b){
 
 Vec<Str> Metro::ShortestPath(std::string station_name_a, std::string station_name_b)
 {
-	Vec<Str> temp;
-    return temp;
+	Vec<Str> ans;
+    
+
+    int a=GetCode( station_name_a) , b=GetCode( station_name_b);
+    if( a>b) std::swap(a,b);
+
+    if( !HasPath( station_name_a, station_name_b) ) return ans;
+
+    Vec<bool> V(N);
+    Vec<int> From(N);
+    bool flag = false;
+
+    std::queue<int> q;
+    q.push(a);
+    From[a]=-1;
+    V[a] = 1;
+    
+    
+
+    while( q.size() ){
+        int cur = q.front();
+        q.pop();
+
+        if( cur == b ){
+            flag = true;
+            break;
+        }
+
+        for(int nxt : Graph[ cur ] ){
+            if( !V[nxt] ){
+                q.push( nxt );
+                From[ nxt ] = cur ;
+                V[ nxt ] =1 ;
+            }
+        }
+    }
+
+    int f = b;
+    if( flag ){
+        while( f >0 ){
+            ans.push_back( Mp_T[ f] );
+        }
+    }
+
+    return ans;
 }
 
 Metro::~Metro()

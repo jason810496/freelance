@@ -18,6 +18,7 @@ struct IMetro {
 // [YOUR CODE WILL BE PLACED HERE] 
 
 
+
 #include<bits/stdc++.h>
 #define Vec std::vector
 #define Str std::string 
@@ -30,6 +31,7 @@ struct IMetro {
 class Metro : public IMetro{
     private :
         UMap< Str , int> Mp;
+        UMap< int ,Str > Mp_T;
         // UMap< int ,Vec<int> > Graph;
         // UMap< int ,int > GroupID;
         // UMap<int,Set<int> > Connection;
@@ -40,7 +42,7 @@ class Metro : public IMetro{
         Vec<bool> vis;
         Vec<pii> Edge;
         int G_ID=1;
-        int N=1005;
+        int N;
         int cnt=0;
         bool flag=false;
 
@@ -55,7 +57,11 @@ class Metro : public IMetro{
 
         inline int GetCode(const Str &s){
 
-            if( Mp.find(s)==Mp.end() ) Mp[ s ]=cnt++;
+            if( Mp.find(s)==Mp.end() ){
+                Mp[ s ]=cnt;
+                Mp_T[ cnt ] = s;
+                cnt++;
+            }
 
             return Mp[ s ];
         }
@@ -71,10 +77,10 @@ class Metro : public IMetro{
 
         void Init(){
             flag = true;
-            // N = Mp.size();
+            N = Mp.size();
 
-            Graph.resize( N );
-            vis.resize( N );
+            Graph.resize( N , Vec<int>(N,0) );
+            vis.resize( N , 0 );
             GroupID.resize( N );
 
             for(pii &i:Edge){
@@ -88,6 +94,10 @@ class Metro : public IMetro{
                     G_ID++;
                 }
             }
+
+            // for(int i=0;i<N;i++){
+            //     std::cout<<i<<' '<<GroupID[i]<<'\n';
+            // }
         }
 
 };
@@ -108,6 +118,7 @@ bool Metro::IsConnected(std::string station_name_a, std::string station_name_b){
 
     int a=GetCode( station_name_a) , b=GetCode( station_name_b);
     if( a>b) std::swap(a,b);
+    if( a==b ) return false;
 
 
     for(int nxt :Graph[a] ){
@@ -124,20 +135,76 @@ bool Metro::HasPath(std::string station_name_a, std::string station_name_b){
 
     int a=GetCode( station_name_a) , b=GetCode( station_name_b);
     if( a>b) std::swap(a,b);
+    if( a==b ) return true;
 
     return GroupID[ a ]==GroupID[ b ];
 }
 
 Vec<Str> Metro::ShortestPath(std::string station_name_a, std::string station_name_b)
 {
-	Vec<Str> temp;
-    return temp;
+	Vec<int> ans;
+    Vec<Str> ret; 
+    
+
+    int a=GetCode( station_name_a) , b=GetCode( station_name_b);
+    if( a>b) std::swap(a,b);
+
+    if( !HasPath( station_name_a, station_name_b) ){
+        // std::cout<<"No path\n";
+        return ret;
+    }
+
+    Vec<bool> V(N);
+    Vec<int> From(N);
+    bool flag = false;
+
+    std::queue<int> q;
+    q.push(a);
+    From[a]=-1;
+    V[a] = 1;
+    
+    
+
+    while( q.size() ){
+        int cur = q.front();
+        q.pop();
+        // std::cout<<cur<<' ';
+
+        if( cur == b ){
+            flag = true;
+            break;
+        }
+
+        for(int nxt : Graph[ cur ] ){
+            if( !V[nxt] ){
+                q.push( nxt );
+                From[ nxt ] = cur ;
+                V[ nxt ] =1 ;
+            }
+        }
+    }
+
+    int f = b;
+    if( flag ){
+        do{
+            ans.push_back( f );
+            f= From[ f ];
+        }while( f >0 );
+    }
+
+    ans.push_back( a );
+
+    for(auto i=ans.rbegin() ; i!=ans.rend() ; i++){
+        ret.push_back( Mp_T[ *i ] );
+    }
+
+    return ret;
 }
 
 Metro::~Metro()
 {
 }
-// ---------------------------------------------------------------------
+// ------------------------------------------------------------
 // [YOUR CODE WILL BE PLACED HERE] 
 
 void Dump(const std::vector<std::string>&);
@@ -151,8 +218,8 @@ void Test6(); // AddConnection, ShortestPath
 void Test7(); // AddConnection, ShortestPath
 
 int main() {
-    std::ios_base::sync_with_stdio(false);
-    std::cin.tie(nullptr);
+    // std::ios_base::sync_with_stdio(false);
+    // std::cin.tie(nullptr);
     int id;
     std::cin >> id;
     void (*f[])() = { Test1, Test2, Test3, Test4, Test5, Test6, Test7};
