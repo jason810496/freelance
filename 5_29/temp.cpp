@@ -43,3 +43,11 @@ bool Search(node *root,string word){
 
     return temp->is_end;
 }
+
+int main(){
+
+    for(int i=0;i<=60;i++){
+        cout<<i<<' '<<char(i+65)<<'\n';
+    }
+    return 0;
+}

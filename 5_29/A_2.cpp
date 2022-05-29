@@ -14,25 +14,10 @@ struct IStringDatabase {
 // ---------------------------------------------
 
 // [YOUR CODE WILL BE PLACED HERE]
-#define Alphabet_Size 60
-#define AAA 65
-/*
-    Trie: Prefix Tree
-    Application : words auto-complete using Trie
-*/
-struct node{
-    int cnt;
-    node *child[Alphabet_Size];
-    node(){
-        cnt=0;
-        for(int i=0;i<Alphabet_Size;i++) child[i]=nullptr;
-    };
-};
 
 class StringDatabase : public IStringDatabase
 {
-
-    node *root = new node();
+    std::map
 
 public :
 	void Add(const std::string&) ;
@@ -54,7 +39,7 @@ void Insert(node *rt,const std::string &str){
     node *temp = rt;
 
     for(char ch :str ){
-        int index= ch-AAA;
+        int index= ch-'a';
 
         if(temp->child[index]==nullptr){
             temp->child[index]=new node;
@@ -63,7 +48,7 @@ void Insert(node *rt,const std::string &str){
         temp= temp->child[index];
     }
 
-    temp->cnt++;
+    temp->is_end= true;
 
     // std::cout<<"Insert\n";
 }
@@ -72,7 +57,7 @@ void DFS(node *rt, std::string &cur, std::vector< std::string> &ans){
     std::cout<<"dd\n";
     
     if( rt==nullptr ) return;
-    if( rt->cnt>0 ){
+    if( rt->is_end ){
         ans.push_back( cur );
         std::cout<<cur<<'\n';
         // return ;
@@ -81,7 +66,7 @@ void DFS(node *rt, std::string &cur, std::vector< std::string> &ans){
     for(int i=0;i<Alphabet_Size;i++){
         if( rt->child[i] ){
             // cur.push_back( char(i) );
-            cur+=char(i+AAA);
+            cur+=char(i);
             DFS(rt->child[i] ,cur,ans );
             cur.pop_back();
         }
@@ -94,21 +79,21 @@ bool check(node *root,const std::string &word){
     node *temp= root;
 
     for(char ch: word){
-        int index=ch-AAA;
+        int index=ch-'a';
 
         if(temp->child[index]==nullptr) return false;
 
         temp= temp->child[index];
     }
 
-    return temp->cnt>0;
+    return temp->is_end;
 }
 
 node *check2(node *root,const std::string &word){
     node *temp= root;
 
     for(char ch: word){
-        int index=ch-AAA;
+        int index=ch-'a';
 
         if(temp->child[index]==nullptr) return nullptr;
 
@@ -149,7 +134,6 @@ std::vector<std::string> Search(node *rt,const std::string &str){
     std::string word = str;
 
     DFS( check2( rt , str ) ,word,ans);
-    // DFS(  ,word,ans);
 
     return ans ;
 }
