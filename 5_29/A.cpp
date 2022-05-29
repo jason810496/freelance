@@ -46,12 +46,7 @@ public :
     // bool check(const std::string&){};
 };
 
-bool isEmpty(node *rt){
-    for(int i=0;i<Alphabet_Size;i++){
-        if( rt->child[ i ] ) return false;
-    }
-    return true;
-}
+
 
 void Insert(node *rt,const std::string &str){
     node *temp = rt;
@@ -162,6 +157,13 @@ void StringDatabase::Add(const std::string& a ){
     Insert(root,a);
 }
 
+bool isEmpty(node *rt){
+    for(int i=0;i<Alphabet_Size;i++){
+        if( rt->child[ i ] ) return false;
+    }
+    return true;
+}
+
 node* Delete(node *root , const std::string &str,int dep=0){
     if( !root ) return nullptr;
     if( dep == str.size() ){
@@ -189,7 +191,7 @@ node* Delete(node *root , const std::string &str,int dep=0){
 
 bool StringDatabase::Remove(const std::string& a )
 {
-	Delete(root,a);
+	root=Delete(root,a);
 }
 
 std::vector<std::string> StringDatabase::StartsWith(const std::string& prefix){

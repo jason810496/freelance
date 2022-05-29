@@ -162,23 +162,41 @@ void StringDatabase::Add(const std::string& a ){
     Insert(root,a);
 }
 
-void Delete(node *root , const std::string &str){
-    node *temp= root;
+bool isEmpty(node *rt){
+    for(int i=0;i<Alphabet_Size;i++){
+        if( rt->child[ i ] ) return false;
+    }
+    return true;
+}
 
-    for(char ch: str){
-        int index=ch-AAA;
+node* Delete(node *root , const std::string &str,int dep=0){
+    if( !root ) return nullptr;
+    if( dep == str.size() ){
 
-        if(temp->child[index]==nullptr) return;
+        if( root->cnt > 0) root->cnt--;
+        if( isEmpty( root ) ){
+            delete root;
+            root=nullptr;
+        }
 
-        temp= temp->child[index];
+        return root;
     }
 
-    temp->cnt--;
+    int idx = str[ dep ]-AAA;
+
+    root->child[ idx ] = Delete( root->child[ idx ] , str , dep+1 );
+
+    if( isEmpty(root) && root->cnt<=0 ){
+        delete root;
+        root = nullptr;
+    }
+
+    return root;
 }
 
 bool StringDatabase::Remove(const std::string& a )
 {
-	Delete(root,a);
+	root=Delete(root,a);
 }
 
 std::vector<std::string> StringDatabase::StartsWith(const std::string& prefix){
