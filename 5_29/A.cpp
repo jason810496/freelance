@@ -41,9 +41,10 @@ public :
 	std::vector<std::string> StartsWith(const std::string& prefix) ;
 	~StringDatabase();
 
-    void Insert(node *rt,const std::string &str);
-    std::vector< std::string> Search(node *rt,const std::string &str);
+    // void Insert(node *rt,const std::string &str);
+    // std::vector< std::string> Search(node *rt,const std::string &str);
 
+    bool check(const std::string&){};
 };
 
 
@@ -64,11 +65,16 @@ void Insert(node *rt,const std::string &str){
     }
 
     temp->is_end= true;
+
+    // std::cout<<"Insert\n";
 }
 
 void DFS(node *rt, std::string &cur, std::vector< std::string> &ans){
+    std::cout<<"dd\n";
+    
     if( rt->is_end ){
         ans.push_back( cur );
+        return ;
     }
 
     for(int i=0;i<Alphabet_Size;i++){
@@ -78,26 +84,45 @@ void DFS(node *rt, std::string &cur, std::vector< std::string> &ans){
             cur.pop_back();
         }
     }
+    
+}
 
+bool StringDatabase::check(const std::string &word){
+    node *temp= root;
+
+    for(char ch: word){
+        int index=ch-'a';
+
+        if(temp->child[index]==nullptr) return false;
+
+        temp= temp->child[index];
+    }
+
+    return temp->is_end;
 }
 
 std::vector<std::string> Search(node *rt,const std::string &str){
     node *temp = rt;
+
+    std::cout<<"s1\n";
 
     bool flag = true ; 
     for(char ch:str){
         int idx = ch='a';
         if( temp->child[ idx ]==nullptr ){
             flag = false;
+            break;
         }
         temp = temp->child[ idx ];
     }
 
-    
+    std::cout<<"ss\n";
 
     std::vector< std::string > ans;
 
     if( !flag ) return ans ;
+
+    std::cout<<"aa\n";
 
     std::string word = str;
 
@@ -150,9 +175,13 @@ int main(){
     db.Add("Hello");
     db.Add("Hi");
 
-    std::cout << "01) " << db.StartsWith("Hello") << std::endl;
-    std::cout << "02) " << db.StartsWith("hello") << std::endl;
-    std::cout << "03) " << db.StartsWith("H") << std::endl;
+    // std::cout << "01) " << db.StartsWith("Hello") << std::endl;
+    // std::cout << "02) " << db.StartsWith("hello") << std::endl;
+    // std::cout << "03) " << db.StartsWith("H") << std::endl;
+
+    std::cout << "01) " << db.check("Hello") << std::endl;
+    std::cout << "02) " << db.check("hello") << std::endl;
+    std::cout << "03) " << db.check("H") << std::endl;
 
     return 0;
 }
