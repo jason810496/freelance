@@ -1,7 +1,9 @@
+// #include <string>
+// #include <vector>
+// #include <iostream>
+// #include <algorithm> // For Test
+// #include <random>    // For Test
 
-
-
-// ----------------------------------------------
 #include<bits/stdc++.h>
 
 struct IStringDatabase {
@@ -11,9 +13,11 @@ struct IStringDatabase {
     virtual ~IStringDatabase() {}
 };
 
-// ---------------------------------------------
+// [YOUR CODE WILL BE PLACED HERE] 
 
 
+
+// [YOUR CODE WILL BE PLACED HERE]
 #define Alphabet_Size 60
 #define AAA 65
 /*
@@ -46,12 +50,8 @@ public :
     // bool check(const std::string&){};
 };
 
-bool isEmpty(node *rt){
-    for(int i=0;i<Alphabet_Size;i++){
-        if( rt->child[ i ] ) return false;
-    }
-    return true;
-}
+
+
 
 void Insert(node *rt,const std::string &str){
     node *temp = rt;
@@ -162,29 +162,18 @@ void StringDatabase::Add(const std::string& a ){
     Insert(root,a);
 }
 
-node* Delete(node *root , const std::string &str,int dep=0){
-    if( !root ) return nullptr;
-    if( dep == str.size() ){
+void Delete(node *root , const std::string &str){
+    node *temp= root;
 
-        if( root->cnt > 0) root->cnt--;
-        if( isEmpty( root ) ){
-            delete root;
-            root=nullptr;
-        }
+    for(char ch: str){
+        int index=ch-AAA;
 
-        return root;
+        if(temp->child[index]==nullptr) return;
+
+        temp= temp->child[index];
     }
 
-    int idx = str[ dep ]-'a';
-
-    root->child[ idx ] = Delete( root->child[ idx ] , str , dep+1 );
-
-    if( isEmpty(root) && root->cnt<=0 ){
-        delete root;
-        root = nullptr;
-    }
-
-    return root;
+    temp->cnt--;
 }
 
 bool StringDatabase::Remove(const std::string& a )
@@ -202,8 +191,24 @@ StringDatabase::~StringDatabase()
 
 
 
-// ----------------------------------------
+// [YOUR CODE WILL BE PLACED HERE] 
 
+void Test1(); // Sample1
+void Test2(); // Add, StartsWith
+void Test3(); // Add, StartsWith
+void Test4(); // Add, StartsWith
+void Test5(); // All
+void Test6(); // All
+void Test7(); // All
+
+int main() {
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    int id;
+    std::cin >> id;
+    void (*f[])() = { Test1, Test2, Test3, Test4, Test5, Test6, Test7};
+    f[id-1]();
+}
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& v) {
@@ -217,35 +222,10 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& v) {
     return os << ']';
 }
 
-int main(){
+namespace Feis {}
 
-    // StringDatabase db;
-    // db.Add("Helloworld");
-    // db.Add("HelloWorld");
-    // db.Add("Hello");
-    // db.Add("Helloworld");
-    // db.Add("Hello");
-    // db.Add("Hi");
-    // db.Add("adb");
-    // db.Add("akc");
-    // db.Add("arr");
-    // db.Add("a");
-    // db.Add("add");
-
-    // std::cout << "01) " << db.StartsWith("Hello") << std::endl;
-    // std::cout << "02) " << db.StartsWith("hello") << std::endl;
-    // std::cout << "03) " << db.StartsWith("H") << std::endl;
-
-    // std::cout << "01) " << db.StartsWith("Hello") << std::endl;
-    // std::cout << "02) " << db.StartsWith("hello") << std::endl;
-    // std::cout << "03) " << db.StartsWith("H") << std::endl;
-    // std::cout << "03) " << db.StartsWith("add") << std::endl;
-    // std::cout << "03) " << db.StartsWith("arr") << std::endl;
-    // std::cout << "03) " << db.StartsWith("akc") << std::endl;
-    // std::cout << "03) " << db.StartsWith("a") << std::endl;
-
-
-    StringDatabase db;
+void Test1() {
+    IStringDatabase&& db = StringDatabase();
     db.Add("Helloworld");
     db.Add("HelloWorld");
     db.Add("Hello");
@@ -260,5 +240,15 @@ int main(){
     db.Remove("Helloworld");
     db.Remove("Hi");
     std::cout << "04) " << db.StartsWith("H") << std::endl;
-    return 0;
 }
+
+void Test2() {
+
+
+
+}
+void Test3() {}
+void Test4() {}
+void Test5() {}
+void Test6() {}
+void Test7() {}
