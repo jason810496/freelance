@@ -39,49 +39,13 @@ private:
 
 #include<bits/stdc++.h>
 
-// 排序，最快，沒有之一
-void merge_sort_recursive(std::vector<unsigned long long> & arr , std::vector<unsigned long long> & reg, int start, int end ) {
-	if (start >= end)
-		return;
-	int len = end - start, mid = (len >> 1) + start;
-	int start1 = start, end1 = mid;
-	int start2 = mid + 1, end2 = end;
-	merge_sort_recursive(arr, reg, start1, end1);
-	merge_sort_recursive(arr, reg, start2, end2);
-	int k = start;
-	while (start1 <= end1 && start2 <= end2)
-	{
-		// 判斷
-		if( arr[start1] <= arr[start2] )
-			reg[k++] =  arr[start1++] ;
-		else 
-		{
-
-			reg[k++] = arr[start2++];
-
-		}
-	}
-	while (start1 <= end1)
-	{
-		reg[k++] = arr[start1++];
-	}
-
-	while (start2 <= end2)
-	{
-		reg[k++] = arr[start2++];
-	}
-	for (k = start; k <= end; k++)
-	{
-		arr[k] = reg[k];
-	}
-}
-
 
 class CompositeOrderedNumberInputStream : public IOrderedNumberInputStream 
 {
 //	const std::vector<IOrderedNumberInputStream*> _buf ;
 	std::vector<unsigned long long> _buf ;
 	size_t _pos ;
+    std::priority_queue< int , std::vector<int> , std::greater<int> > pq;
 public :
 	CompositeOrderedNumberInputStream( const std::vector<IOrderedNumberInputStream*> &buf );
 
@@ -96,16 +60,33 @@ CompositeOrderedNumberInputStream::CompositeOrderedNumberInputStream( const std:
 	_pos = 0 ;
 	int n = buf.size();
 	IOrderedNumberInputStream* input ;
-	for( i = 0 ; i < n ; ++i )
-	{
-		input = buf[i] ;
-		while( input->IsEndOfStream() == false )
-		{
-			_buf.push_back( input->Get());
-		}
-	}
-	std::vector<unsigned long long> temp( _buf.size());
-	merge_sort_recursive( _buf , temp , 0 , _buf.size() - 1 );
+    
+    while( true ){
+        bool flag = true ;
+
+        for(int i=0;i<n;i++){
+            int SZ = 20, cnt=0;
+            while( !buf[i]->IsEndOfStream() && SZ--){
+                pq.push( buf[i]->Get() );
+                if( pq.size() > 2000 ){
+                    while( pq.size()>1800 ){
+                        _buf.push_back( pq.top() );
+                        pq.pop();
+                    }
+                }
+                cnt++;
+            }
+
+            if( cnt ) flag = false;
+        }
+
+        if( flag ) break;
+    }
+
+    while( pq.size() ){
+        _buf.push_back( pq.top() );
+        pq.pop();
+    }
 }
 unsigned long long CompositeOrderedNumberInputStream::Get()
 {

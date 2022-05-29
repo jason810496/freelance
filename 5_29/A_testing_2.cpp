@@ -1,9 +1,3 @@
-// #include <string>
-// #include <vector>
-// #include <iostream>
-// #include <algorithm> // For Test
-// #include <random>    // For Test
-
 
 // #include<bits/stdc++.h>
 #include<string>
@@ -16,30 +10,22 @@ struct IStringDatabase {
     virtual ~IStringDatabase() {}
 };
 
-// [YOUR CODE WILL BE PLACED HERE] 
 
 
 
 // [YOUR CODE WILL BE PLACED HERE]
-// #include<bits/stdc++.h>
-#include<map>
-// #include<unordered_map>
-#define UMap std::unordered_map
-#define Map std::map
-#define F first 
-#define S second
-#define AAA 0
+#define Alphabet_Size 60
+#define AAA 65
 /*
     Trie: Prefix Tree
     Application : words auto-complete using Trie
 */
 struct node{
     bool isEnd = false;
-    // node *child[Alphabet_Size];
-    Map<int,node*> child;
+    node *child[Alphabet_Size];
     node(){
         isEnd = false;
-        // for(int i=0;i<Alphabet_Size;i++) child[i]=nullptr;
+        for(int i=0;i<Alphabet_Size;i++) child[i]=nullptr;
     };
 };
 
@@ -78,7 +64,6 @@ void Insert(node *rt,const std::string &str){
 
     temp->isEnd = true;
 
-    // std::cout<<"Insert\n";
 }
 
 void DFS(node *rt, std::string &cur, std::vector< std::string> &ans){
@@ -87,16 +72,13 @@ void DFS(node *rt, std::string &cur, std::vector< std::string> &ans){
     if( rt==nullptr ) return;
     if( rt->isEnd ){
         ans.push_back( cur );
-        // std::cout<<cur<<'\n';
-        // return ;
     }
 
-    // for(int i=0;i<Alphabet_Size;i++){
-    for(auto &it:rt->child){
-        if( it.S ){
+    for(int i=0;i<Alphabet_Size;i++){
+        if( rt->child[i] ){
             // cur.push_back( char(i) );
-            cur+=char(it.F+AAA);
-            DFS( it.S ,cur,ans );
+            cur+=char(i+AAA);
+            DFS(rt->child[i] ,cur,ans );
             cur.pop_back();
         }
     }
@@ -119,34 +101,44 @@ bool check(node *root,const std::string &word){
 }
 
 std::vector<std::string> Search(node *rt,const std::string &str){
+    node *temp = rt;
 
     std::vector< std::string > ans;
 
-    node *temp= rt;
-
-    for(char ch: str){
-        int index=ch-AAA;
-
-        if(temp->child[index]==nullptr) return ans;
-
-        temp= temp->child[index];
+    for(char ch:str){
+        int idx = ch-AAA;
+        if( temp->child[ idx ]==nullptr ) return ans;
+        temp = temp->child[ idx ];
     }
 
-    std::string word =str;
+    // std::cout<<"ss "<<flag<<"\n";
+
+    
+
+    // if( flag ) return ans ;
+
+    // if( temp ) std::cout<<"OK\n";
+
+    // std::cout<<"aa\n";
+
+    std::string word = str;
 
     DFS( temp ,word,ans);
+    // DFS(  ,word,ans);
 
     return ans ;
 }
 
 void StringDatabase::Add(const std::string& a ){
-    // if( check(root,a) ) return;
-
+    if( check(root,a) ) return;
     Insert(root,a);
 }
 
 bool isEmpty(node *rt){
-    return rt->child.empty();
+    for(int i=0;i<Alphabet_Size;i++){
+        if( rt->child[ i ] ) return false;
+    }
+    return true;
 }
 
 node* Delete(node *root , const std::string &str,int dep=0){
