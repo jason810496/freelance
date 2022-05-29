@@ -24,6 +24,7 @@ struct IMetro {
 #define Str std::string 
 #define Set std::set
 #define UMap std::unordered_map
+#define Map std::map
 
 class Metro : public IMetro{
     private :
@@ -31,8 +32,8 @@ class Metro : public IMetro{
         UMap< int , Str > Mp_T;
         UMap< int ,Vec<int> > Graph;
         UMap< int ,int > GroupID;
-        std::bitset<100005> vis=0;
-        UMap<int,Set<int> > Connection;
+        std::bitset<500005> vis=0;
+        // UMap<int,Set<int> > Connection;
         int G_ID=1;
         int G_Size;
         int cnt=0;
@@ -60,7 +61,6 @@ class Metro : public IMetro{
         void DFS(int cur){
             vis[ cur ]=1;
             GroupID[ cur ] = G_ID;
-            flag = false;
 
             for(int nxt : Graph[ cur ] ){
                 if( !vis[nxt] ) DFS( nxt );
@@ -69,10 +69,14 @@ class Metro : public IMetro{
 
         void Init(){
             vis=0;
+            flag = false;
             G_Size=Mp.size();
             G_ID=1;
             for(int i=0;i<G_Size;i++){
-                if( !vis[i] ) DFS(i);
+                if( !vis[i] ){
+                    DFS(i);
+                    G_ID++;
+                }
             }
         }
 
@@ -87,18 +91,28 @@ void Metro::AddConnection(std::string station_name_a, std::string station_name_b
     Graph[a].push_back(b);
     Graph[b].push_back(a);
 
-    Connection[a].insert(b);
+    // Connection[a].insert(b);
+    // Connection[b].insert(a);
 
     flag = true ;
 }
 
 bool Metro::IsConnected(std::string station_name_a, std::string station_name_b)
 {
+    // if( flag ){
+    //     Init();
+    // }
+
     int a=GetCode( station_name_a) , b=GetCode( station_name_b);
     if( a>b) std::swap(a,b);
     if( a==b ) return 0;
 
-    return Connection[a].find(b)!=Connection[a].end();
+    // return Connection[a].find(b)!=Connection[a].end();
+
+    for(int nxt:Graph[a] ){
+        if(nxt==b) return true;
+    }
+    return false;
 }
 
 
@@ -133,17 +147,17 @@ Vec<Str> Metro::ShortestPath(std::string station_name_a, std::string station_nam
         return ret;
     }
 
-    Vec<bool> V( G_Size);
-    Vec<int> From( G_Size );
+    Vec<bool> V( G_Size , 0);
+    Vec<int> From( G_Size ,-1);
     bool flag = false;
 
     std::queue<int> q;
     q.push(a);
     From[a]=-1;
     V[a] = 1;
-    
-    
 
+    // std::cout<<a<<' '<<b<<'\n';
+    
     while( q.size() ){
         int cur = q.front();
         q.pop();
