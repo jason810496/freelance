@@ -25,6 +25,7 @@ struct IMetro {
 #define Set std::set
 #define UMap std::unordered_map
 #define Map std::map
+#define MAX_N 10005
 
 class Metro : public IMetro{
     private :
@@ -32,7 +33,8 @@ class Metro : public IMetro{
         UMap< int , Str > Mp_T;
         UMap< int ,Vec<int> > Graph;
         UMap< int ,int > GroupID;
-        std::bitset<500005> vis=0;
+        std::bitset<MAX_N> vis=0;
+        int P[MAX_N] , Sz[ MAX_N ];
         // UMap<int,Set<int> > Connection;
         int G_ID=1;
         int G_Size;
@@ -46,6 +48,7 @@ class Metro : public IMetro{
         std::vector<std::string> ShortestPath(std::string station_name_a, std::string station_name_b) override;
         ~Metro() override;
         Metro(){
+            
         }
 
         inline int GetCode(const Str &s){
@@ -58,25 +61,44 @@ class Metro : public IMetro{
             return Mp[ s ];
         }
 
-        void DFS(int cur){
-            vis[ cur ]=1;
-            GroupID[ cur ] = G_ID;
-
-            for(int nxt : Graph[ cur ] ){
-                if( !vis[nxt] ) DFS( nxt );
-            }
+        inline int Find(int x){
+            // std::cout<<x<<'\n';
+            return ( x==P[x] ? x: P[x] = Find( P[x]) );
         }
 
+        void Union(int a,int b){
+            a=Find(a) , b=Find(b);
+            if( a== b ) return ;
+
+            if( Sz[b] > Sz[a] ) std::swap(a,b);
+            Sz[a] += Sz[b];
+            P[b]=a;
+        }
+
+        // void DFS(int cur){
+        //     vis[ cur ]=1;
+        //     GroupID[ cur ] = G_ID;
+
+        //     for(int nxt : Graph[ cur ] ){
+        //         if( !vis[nxt] ) DFS( nxt );
+        //     }
+        // }
+
         void Init(){
-            vis=0;
+            // vis=0;
             flag = false;
-            G_Size=Mp.size();
-            G_ID=1;
-            for(int i=0;i<G_Size;i++){
-                if( !vis[i] ){
-                    DFS(i);
-                    G_ID++;
-                }
+            // G_Size=Mp.size();
+            // G_ID=1;
+            // for(int i=0;i<G_Size;i++){
+            //     if( !vis[i] ){
+            //         DFS(i);
+            //         G_ID++;
+            //     }
+            // }
+
+            for(int i=0;i<MAX_N;i++){
+                P[i]=i;
+                Sz[i]=0;
             }
         }
 
@@ -85,6 +107,10 @@ class Metro : public IMetro{
 
 void Metro::AddConnection(std::string station_name_a, std::string station_name_b)
 {
+    if( flag ){
+        Init();
+    }
+
 	int a=GetCode( station_name_a)  ,b=GetCode( station_name_b);
     if( a>b) std::swap(a,b);
 
@@ -94,7 +120,9 @@ void Metro::AddConnection(std::string station_name_a, std::string station_name_b
     // Connection[a].insert(b);
     // Connection[b].insert(a);
 
-    flag = true ;
+    // flag = true ;
+
+    Union( a, b );
 }
 
 bool Metro::IsConnected(std::string station_name_a, std::string station_name_b)
@@ -117,15 +145,14 @@ bool Metro::IsConnected(std::string station_name_a, std::string station_name_b)
 
 
 bool Metro::HasPath(std::string station_name_a, std::string station_name_b){
-    if( flag ){
-        Init();
-    }
+    
 
     int a=GetCode( station_name_a) , b=GetCode( station_name_b);
     if( a>b) std::swap(a,b);
     if( a==b ) return 1;
 
-    return GroupID[ a ]==GroupID[ b ];
+    // return GroupID[ a ]==GroupID[ b ];
+    return Find(a) == Find(b);
 }
 
 Vec<Str> Metro::ShortestPath(std::string station_name_a, std::string station_name_b)
