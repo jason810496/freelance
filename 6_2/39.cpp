@@ -6,6 +6,7 @@ using namespace std;
 #define S second 
 #define ll long long 
 #define all(x) x.begin(),x.end()
+#define PB push_back
 const int INF = 1e9;
 const int N = 505;
 
@@ -38,23 +39,23 @@ signed main(){
         //     cout<<'\n';
         // }
 
-        queue<int> q;
+        priority_queue<int , vector<int> , greater<int> > q;
         vector<int> ans;
         for(int i=1;i<=n;i++){
             if( !In[i] ){
                 q.push( i );
-                ans.push_back( i );
             }
         }
 
         while( q.size() ){
-            int cur = q.front();
+            int cur = q.top();
             q.pop();
 
+            ans.push_back( cur );
             for(int nxt : G[cur] ){
                 if( !--In[nxt] ){
                     q.push( nxt );
-                    ans.push_back( nxt );
+                    // ans.push_back( nxt );
                 }
             }
         }
