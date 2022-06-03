@@ -39,6 +39,7 @@ int T[MAX_N<<2];
 void Build(int idx,int L,int R){
     if(L==R){
         cin>>T[ idx ];
+        // T[idx] = arr[L];
         return ;
     }
 
@@ -94,12 +95,12 @@ signed main(){
     //     cin>>arr[i];
     // }
 
-    // Build(1,1,n);
+    Build(1,1,n);
 
-    for(int i=1,x;i<=n;i++){
-        cin>>x;
-        Update(1,1,n,i,x);
-    }
+    // for(int i=1,x;i<=n;i++){
+    //     cin>>x;
+    //     Update(1,1,n,i,x);
+    // }
 
     cin>>q;
 
