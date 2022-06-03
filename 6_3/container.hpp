@@ -4,7 +4,7 @@
 
 namespace CS52 {
 
-    class Container {
+    class Container :public Sequence{
 
     public :
         Container (); // default constructor
@@ -55,6 +55,8 @@ namespace CS52 {
         // friend std::ostream& operator<<( std::ostream & , Container &);
 
         Container operator -(const CS52::Container &);
+
+        std::string type() const override;
 
     private :
         int _size = 0;
@@ -193,4 +195,10 @@ CS52::Container CS52::Container::operator -(const CS52::Container &rhs){
     }
 
     return res;
+}
+
+
+std::string CS52::Container::type(){
+    
+    return "CS52::Container";
 }

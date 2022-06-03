@@ -11,10 +11,12 @@ int main(){
 
     std::cout<<o<<'\n';
 
-    CS52::Sequence *seq[2];
+    // CS52::Sequence *seq[2];
 
-    seq[0] = new CS52::Container(5,11);
-    seq[1] = new CS52::Container(3,1);
+    CS52::Sequence * ptr1;
+
+    // seq[0] = new CS52::Container(5,11);
+    // seq[1] = new CS52::Container(3,1);
 
     std::cout<<seq[0]->type();
 }
