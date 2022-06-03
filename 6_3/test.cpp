@@ -1,4 +1,5 @@
 #include "container.hpp"
+#include "Sequence.h"
 
 int main(){
     CS52::Container m( 5 ,3);
@@ -8,5 +9,12 @@ int main(){
 
     CS52::Container o=n-m;
 
-    std::cout<<o;
+    std::cout<<o<<'\n';
+
+    CS52::Sequence *seq[2];
+
+    seq[0] = new CS52::Container(5,11);
+    seq[1] = new CS52::Container(3,1);
+
+    std::cout<<seq[0]->type();
 }
