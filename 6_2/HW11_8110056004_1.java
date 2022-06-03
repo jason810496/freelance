@@ -39,6 +39,7 @@ public class HW11_8110056004_1{
 
         while( pq.size() >0 ){
             pii cur = pq.top();
+            pq.pop();
             int x=cur.pos/m;
             int y=cur.pos%m;
             int h=cur.ht;

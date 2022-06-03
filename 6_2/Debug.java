@@ -11,7 +11,7 @@ public class Debug{
     }
 
 
-    public class HW11_8110056004_1{
+    public static class HW11_8110056004_1{
         int N = 1005 , INF = 100000005;
         int n , m;
         int move[][] = { {0,1} , {1,0} , {0,-1} , {-1,0 } };
