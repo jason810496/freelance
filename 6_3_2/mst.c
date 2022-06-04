@@ -118,6 +118,11 @@ int pqIndex = -1;
 int *visited;
 
 //Prim's Algorithm using adjacency list
+
+/*
+    這邊就是先宣告各個函式
+    等一下才會寫到各個函式在幹麻
+*/
 node *createNode(int,int);
 Graph *graphInit(int);
 void addEdge(Graph *graph, int, int ,int);
@@ -128,11 +133,12 @@ void prim(Graph *graph, int);
 
 
 /*
-Priority Queue Operations 
-此處操作上課說過，
-每次加入新頂點後須要額外花費O(E)的時間找到最小成本的邊，
-請將此處的處理方法改善成僅需(log V)的版本
-(demo時必問，未改寫者滿分80)
+    Priority Queue  的操作
+    isEmpty ： 檢查當前優先隊列是否為空
+    isFull : 檢查隊列滿了沒
+    peek : 回傳當前隊列中 最小邊權的邊 的「 index 」
+    dequeue : 將最小邊權的邊 從隊列中移出 並回傳
+    display : 後來沒有用到
 */
 int isEmpty();
 int isFull();
@@ -142,7 +148,9 @@ mst dequeue();
 void display();
 
 
-
+/*
+    主程式開始
+*/
 int main(int argc, char *argv[])
 {
 
@@ -151,7 +159,13 @@ int main(int argc, char *argv[])
 	mst *ptr;
 	FILE* fin;
 	
-	if (argc < 1) {
+    /* 這邊是題目要讀入 「 檔名」， 在跑程式的時候會向這樣用：
+
+        ./a.out g1.txt
+        ./a.out g2.txt 
+    
+    */
+	if (argc < 1) { // 判斷有沒有後面的參數 （ g1.txt 等 ）
 		fin = stdin;
 	}
 	else {
@@ -161,11 +175,21 @@ int main(int argc, char *argv[])
 			exit(1);
 		}
 	}
+
+    /*
+        接著開始讀檔
+        n 是題目的節點數量 （ 同時也是最大節點編號 ）
+        m 是等一下要輸入幾個邊 
+    */
 	fscanf(fin, "%d, %d", &n, &m);
 	printf("nodes = %3d, edges = %3d\n", n, m);
 	
+    /*
+        這邊的 e 是 edges 的意思 ， 拿來存所有的邊的陣列
+        而 e 是有在 main 函式最上方宣告 ， 並且是 mst* ( mst pointer )的 type  
+    */
 	e = (mst *)malloc(sizeof(mst)*(m+1));
-    Graph *graph = graphInit(n);
+    Graph *graph = graphInit(n); // 利用 graphInit 來初始化 graph 指標
 
 	// Graph size
 	Size = n;
@@ -176,9 +200,17 @@ int main(int argc, char *argv[])
 		fscanf(fin, "%d, %d, %d", &st, &ed , &wt); //從txt讀入邊的資料
 		printf("edge[%3d]: start = %3d, end = %3d, cost = %3d\n", i, st, ed , wt );//將讀入的邊印出
 		
+        // 把邊加入圖中 , addEdge 在後面才會寫到
         addEdge( graph , st , ed , wt );
         addEdge( graph , ed , st , wt );
+        /*
+            因為是 「 無向圖 」 所以需要 st 指向 ed 的邊和 ed 指向 st 的邊 ,才是無向圖
+            像這樣：
 
+            st ----wt----> ed
+            st <---wt----- ed 
+        
+        */
 	}
 
 
