@@ -4,19 +4,19 @@
 
 namespace CS52 {
 
-    class Container :public Sequence{
+    class Container : public Sequence{
 
     public :
         Container (); // default constructor
         Container ( int size , int initial_value ); // overloaded constructor
         Container ( const Container & ); // copy constructor
-        ~ Container (); // Destructor
+        ~ Container () override; // Destructor
 
         // Returns a reference to the element at location i in an Container .
         int& at ( int i ) const ;// throws an std :: string exception
 
         // Returns the allocated storage for an Container .
-        int capacity () const ;
+        int capacity () const override;
 
         // Erases the elements of an Container but does not change capacity .
         void clear ();
@@ -41,7 +41,7 @@ namespace CS52 {
         int& back () const ; // throws an std :: out_of_range
 
         // Returns the number of elements in the Container .
-        int size () const ;
+        int size () const override;
 
         // Search for a key in Container
         // return index of key or - if not found
@@ -198,7 +198,7 @@ CS52::Container CS52::Container::operator -(const CS52::Container &rhs){
 }
 
 
-std::string CS52::Container::type(){
+std::string CS52::Container::type() const {
     
     return "CS52::Container";
 }
