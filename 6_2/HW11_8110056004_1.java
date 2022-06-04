@@ -1,4 +1,3 @@
-import java.io.Console;
 
 public class HW11_8110056004_1{
     int N = 10005 , INF = 100000005;
@@ -33,13 +32,6 @@ public class HW11_8110056004_1{
             vis[ id1 ]=true;
             vis[ id2 ]=true;
         }
-        
-        // for(int i=0;i<n;i++){
-        //     for(int j=0;j<m;j++){
-        //         System.out.print( vis[i*m+j] );
-        //     }
-        //     System.out.println("");
-        // }
 
         int ans=0;
 
