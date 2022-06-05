@@ -127,7 +127,6 @@ node *createNode(int,int);
 Graph *graphInit(int);
 void addEdge(Graph *graph, int, int ,int);
 int getSize(Graph *graph, int);
-node *getNode(Graph *graph, int, int);
 void visit(Graph *graph, int);
 void prim(Graph *graph, int);
 
@@ -214,7 +213,11 @@ int main(int argc, char *argv[])
 	}
 
 
-    // debug
+    /*
+        這邊是先 Debug 
+        把整個「圖」先輸出出來檢查 
+    
+    */
 
 	// printf("debug : \n");
 
@@ -232,87 +235,135 @@ int main(int argc, char *argv[])
     printf("\ngrowing spanning trees...\n");
     //prim gogo~
 
+    /*
+        把 visited 陣列開好
+    */
  	visited = (int *)malloc(sizeof(int) * n);
 
 	for (i = 0; i < n; i++)
 	{
 	    visited[i] = 0;
+        // 初始化 visited 陣列
 	}
 
+    /*
+        如果當前這個點沒有被拜訪 ， 就進行 Prim's 
+        ( 但是以這些範例都只會執行一次 ，因為給的範例都是「一個連通圖 」 )
     
+    */
 	for (i = 0; i < n ;i++)
 	{
 		if(!visited[i]){
             prim(graph, i);
         }
-	}	
+	}
+    // 結束讀檔
     fclose(fin);
     return 0;
 }
 
-
+/*
+    初始化「圖 」 的函式，並回傳 「 圖的指標 」
+*/
 Graph *graphInit(int vertices)
 {
-	// fix malloc error
+	// 配置 「 圖」 的記憶體
 	Graph *graph = (Graph*)malloc(sizeof(Graph));
+    /*
+        adjList 代表 adjacency list ( 相鄰列表 ) ， 可以看成一條一條的鍊結串練 （ 可以上網看一下示意圖 會比較好理解 ）
+
+        不過大致會如下 ： 
+        []->[]->[]->[]
+        []->[]
+        []->[]->[]->[]->[]->[]->[]
+        []->[]
+        []->[]->[]->[]->[]
+
+
+        名詞比較 ： 
+        「 相鄰列表 」 ： adjacency list ，是除存圖的一種方式 ，透過 「 接連串練 」實做
+        「 接連串練 」 ： linked list ， 是透過指標構成牽後關係的資料結構
+    */
 	graph->adjLists = (node**)malloc(vertices * sizeof(node *));
 	int i;
 	for (i = 0; i < vertices; i++)
 	{
     	graph->adjLists[i] = NULL;
+        // 把鍊結串練初始好 
 	}
 	return graph;
+    //  回傳剛剛配置的「 圖 」
 }
 
+/*
+    這邊 Create 是把節點在「 圖中的相鄰列表的接連串練 」 建立起來的函式 
+    這邊是透過 「 指標的指標 」 來達到 C++ 中 pass by reference 的效果 （ 可以查一下 pass by reference 的意思 ）
+    並且用「 遞迴 」 來遍歷鍊竭串練  
+    而 cur 就是存鍊結串練「 指標的指標 」 
+    v : vertex ( 節點編號 )
+    c : cost ( 邊的權重 ) 
+    next : 當前鍊結串練 指向的瞎一個位置 （ 因為當前會是鍊結串練中的最後一個 ， 所以把 next 設為 NULL ） 
+*/
 void Create(node **cur , int v ,int c){
+
+    // 遞迴停止條件 ： 當前是 「 空指標 ( NULL )」
     if( ! *cur ){
+        // 配置記憶體 
         *cur = (node*)malloc(sizeof(node));
         (*cur)->cost = c;
         (*cur)->vertex = v;
         (*cur)->next = NULL;
-
-        // return cur;
+        // 把當前節點的資訊設定好 
 
         return;
     }
 
+    // 當前不是空節點的時候，記繼續遞迴 
     Create( &(*cur)->next ,v,c);
+    /*
+        &(*cur)->next : 這個看起來非常複雜的東西（ 建議先去看一下 deference 跟 pointer 相關的東西
+
+        因為 cur 現在是 「 指標的指標 」
+        所以 (*cur) 是 「 指標 」
+        (*cur)->next 存取下一個節點的指標 ， 所以型態還是 「 指標 」
+        因為傳值的方式是 「 指標的指標 」
+        所以需要透過 & operator 取得 「 (*cur)->next  」這個東西的指標
+        最後就是這串東西 ：   &(*cur)->next
+        後面的函式也有透過這種技巧完成 
+    */
 }
+
+
+/*
+    addEdge ： 把「 邊 」的資訊存到 「 圖 」中
+
+*/
 void addEdge(Graph *graph, int i, int j,int cost)
 {
-	// node *newNode = 
-	
-
+    // 取得 「 接連串練 」 指標的指標
 	node **cur = &graph->adjLists[i];
-	
+	// 透過剛剛的 Create 在鍊結串練中建立節點
     Create( cur,j,cost);
 }
 
+/*
+    getSize : 取得「 相鄰列表 」中與 「 編號 v 的節點 」有連接其它節點的數量 
+    （ 從圖論來講 ： 就是取得 v 的「度數」的函式 ）
+
+*/
 int getSize(Graph *graph, int v)
 {
-	int count = 0;
-	node *temp = (node*)malloc(sizeof(node));
+	int count = 0; // 紀錄接連串練的大小
+	node *temp = (node*)malloc(sizeof(node)); // 宣告 node pointer 的變數 ， 用來遍歷接連串練 
     temp = graph->adjLists[v];
+    // 利用 while 遍歷串練
 	while(temp)
 	{
-		temp= temp->next;
+		temp= temp->next; // 移到下一個指標
 		count++;
 	}
+    // 回傳大小
 	return count;
-}
-
-node *getNode(Graph *graph, int v, int index)
-{
-	int count = 0;
-	node *temp = graph->adjLists[v];
-	while (count < index)
-	{
-	    temp = temp->next;
-	    count++;
-	}
-	//完成 將找到的頂點回傳
-
-	return temp ;
 }
 
 void visit(Graph *graph, int v) {
@@ -322,11 +373,15 @@ void visit(Graph *graph, int v) {
 	*/
 	visited[v] = 1;
 
+    // 有 m 個點與 v 相連
 	int m = getSize(graph, v);
-
+    // 取得接連串練的 head
     node *adj = graph->adjLists[ v ];
 
-    // printf( " visit : %d \n" ,v );
+    /*
+        檢查與當前的點「 相鄰 」的點 是否被 「 拜訪過 」
+        if ( 沒有被拜訪 ) 加入 pq 中
+    */ 
     for(int j=0;j<m;j++){
         
         if( !visited[ adj->vertex ] ){
@@ -336,50 +391,60 @@ void visit(Graph *graph, int v) {
             e.cost = adj->cost;
 
             enqueue( e );
+            // 加入 pq 中
 
-            // printf(" enq : %d " , adj->vertex );
         }
-
+        // 繼續遍歷串練 
         adj = adj->next ; 
-        // printf(" \n" );
-
-
     }
 }
 
+/*
+    prim's 主程式
+
+*/
 void prim(Graph *graph, int v)
 {
 	
+    // 先把節點 v 相鄰的邊都放入 pq 中
 	visit(graph, v);
+    // MST 大小
     int weight = 0 ;
 
+    // 當前 pq 還有 edge
 	while (!isEmpty())
 	{
+        // 把最小邊權的邊拿出來 
 		mst e = dequeue();
         int v = e.start, w = e.end; 
+        // 如果不會形成「 環 」 
         if (visited[v] && visited[w]) continue; 
+        // 選擇這條邊
         printf("start = %3d, end = %3d, cost = %3d\n", e.start, e.end, e.cost);//將選擇的最小成本邊印出
 		
-		//完成成本加總
-		
+		// 再把附近的邊都納入 pq 
         if (!visited[v]) visit(graph, v);
         if (!visited[w]) visit(graph, w);
 
         weight+=e.cost ;
+        //完成成本加總
 	}
     printf("total cost: %d ", weight);//印出此生成樹總成本
 }
 
+// pq 是否為空
 int isEmpty(){
 	
 	return pqIndex<=0 ;
 }
 
+// pq 是否超過最大限制
 int isFull(){
 
 	return pqIndex>= (Size-1) ;
 }
 
+// 把邊加入 pq 中
 void enqueue(mst e)
 {
     if(!isFull())
@@ -391,33 +456,46 @@ void enqueue(mst e)
     }
 }
 
+/*
+    peek 回傳「 最小邊權 」 的 index 
+
+*/
 int peek()
 {
-    int minCost = MAX;
-    int edge = -1;
+    int minCost = MAX; // 最小邊權的權重 
+    int edge = -1; // index 
 	
     for (int i = 0; i <= pqIndex; i++) 
     { 
-        if (minCost == pq[i].cost ) // choose bigger edge
+        if (minCost == pq[i].cost ) // 如果邊權的最小的一樣 ， 就選比較後面的 
         {
+            // 更新邊權 ＆ index 
             minCost = pq[i].cost;
             edge = i;
         }
-        else if (minCost > pq[i].cost) {
+        else if (minCost > pq[i].cost) { // 發現更小的邊權 
+            // 更新邊權 ＆ index 
             minCost = pq[i].cost;
             edge = i;
         }
     }
     
-    return edge;
+    return edge; // 回傳 index 
 }
 
+/*
+    dequeue : 
+    回傳 pq 中最小的邊權的邊
+*/
 mst dequeue()
 {
 	mst e;
     if(!isEmpty())
     {
-        int edge = peek();
+        /*
+            剛剛的 peek是回傳最小邊權的邊的 index 
+        */
+        int edge = peek(); // 最小邊
 		
         e.start = pq[edge].start;
         e.end = pq[edge].end;
@@ -426,9 +504,10 @@ mst dequeue()
         for (int i = edge; i < pqIndex; i++) {
             pq[i] = pq[i + 1];
         }
-		//完成從pq移除最小邊
+		//完成從pq移除最小邊 （ 把最小邊覆蓋掉
 
 		pqIndex--;
+        // 更新 pq 大小 
     }
 
 	return e;
