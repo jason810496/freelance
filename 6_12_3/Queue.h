@@ -6,8 +6,6 @@ class Queue {
         int* arr;
         unsigned size;        // number of elements in the queue
         unsigned capacity;    // number of slots in the array
-        unsigned frontindex;  // index the topmost element
-        unsigned backindex;   // index where the next element will be placed
 
     public:
         // Desc:  Constructor
