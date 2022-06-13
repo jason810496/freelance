@@ -1,10 +1,12 @@
-#include "Queue.h"
+#include "Queue.cpp"
 #include <iostream>
 using namespace std;
 
 
 int main () {
     Queue Q;
+    // test exception 
+    // Q.peek();
 
     // enqueue 1, 2, 3, 4, 5
     for (int i = 1; i <= 5; i++) {
@@ -35,6 +37,12 @@ int main () {
         cout << "top " << y << endl;
     }
     cout << endl;
+
+    // test exception 
+    Q.peek();
+    Q.dequeue();
+    Q.dequeue();
+    
 
 
     return 0;
