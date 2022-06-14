@@ -32,8 +32,6 @@ signed main(){
     priority_queue< pii , vector<pii> , greater<pii> > pq;
     pq.push( {Dis[1] , 1 } ); 
 
-    ll ans=0;
-
     while( pq.size() ) {
         int cur = pq.top().S;
         int D = pq.top().F;
@@ -42,7 +40,6 @@ signed main(){
 
         if( Dis[cur]!=D ) continue;
 
-        bool flag = true;
         for(auto &e:G[ cur ]){
             int nxt = e.F;
             int wt = e.S;
@@ -51,14 +48,16 @@ signed main(){
                 Dis[nxt] = Dis[cur]+wt;
                 pq.push( { Dis[nxt] , nxt } );
 
-                flag = false;
             }
         }
-
-        if( flag ) ans+=Dis[cur];
     }
 
-    
+    int ans=0;
+
+    for(int i=1;i<=n;i++){
+        ans = max( ans , Dis[i]);
+    }
+
     cout<<ans;
 
     return 0;
