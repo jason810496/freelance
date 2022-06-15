@@ -11,7 +11,7 @@ Queue::Queue() : size(0), front(0) , back(0) , capacity(INITIAL_SIZE){
 
 // Desc:  Destructor
 Queue::~Queue() {
-    delete arr;
+    delete [] arr;
 } // destructor
 
 // Double Capcity when the array is full 
@@ -26,7 +26,7 @@ void Queue::DoubleCapcity(){
     front = 0;
     capacity*=2;
 
-    delete arr;
+    delete [] arr;
     arr = temp;
 
     //std::cout<<"Double cap check\n";
@@ -45,7 +45,7 @@ void Queue::HalveCapcity(){
     front = 0;
     capacity/=2;
 
-    delete arr;
+    delete [] arr;
     arr = temp;
 
     //std::cout<<"Halve cap check\n";
@@ -53,9 +53,8 @@ void Queue::HalveCapcity(){
 
 // Desc:  Copy Constructor
 Queue::Queue(const Queue &other) {
-    if( other.size > capacity ){
-        DoubleCapcity();
-    }
+    capacity = other.capacity;
+    arr = new int[capacity];
 
     for(int i=0;i<other.capacity;i++){
         arr[i]=other.arr[i];
@@ -63,6 +62,9 @@ Queue::Queue(const Queue &other) {
     front = other.front;
     back = other.back;
     size = other.size;
+    
+
+    std::cout<<" copy \n";
 
 } // copy constructor
 
@@ -70,14 +72,21 @@ Queue::Queue(const Queue &other) {
 // Desc:  Assignment operator
 Queue & Queue::operator=(const Queue &rhs) {
     if (this != &rhs) {
-        delete arr;
-        arr = rhs.arr;
 
+        delete [] arr;
         capacity = rhs.capacity;
+        arr = new int[ capacity ];
         size = rhs.size;
         front = rhs.front;
         back = rhs.back;
+
+        for(int i=0;i<capacity;i++){
+            arr[i] = rhs.arr[i];
+        }
+
     }
+
+    // std::cout<<" = oper \n";
     return *this;
 } // lhs = rhs
 
