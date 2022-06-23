@@ -7,22 +7,36 @@ typedef pair<int,int> pii;
 
 vector< vector<int> > Move = { {0,1} , {1,0} , {0,-1} , {-1,0} };
 
-void solve(){
+
+struct data{
     int n , m ;
     pii Start , End;
-    cin>>n>>m;
-    cin>>Start.X>>Start.Y>>End.X>>End.Y;
+    vector< vector< int > > Graph;
+};
 
-    vector< vector< int > > Graph(n+1 , vector<int>(m+1) );
+vector< data > Data;
 
-    for(int i=1;i<=n;i++){
-        for(int j=1;j<=m;j++){
+void Input(int idx){
+    cin>>Data[idx].n>>Data[idx].m;
+    cin>>Data[idx].Start.X>>Data[idx].Start.Y>>Data[idx].End.X>>Data[idx].End.Y;
+
+    Data[idx].Graph.resize(Data[idx].n+1 , vector<int>(Data[idx].m+1) );
+
+    for(int i=1;i<=Data[idx].n;i++){
+        for(int j=1;j<=Data[idx].m;j++){
             char ch;
             cin>>ch;
             
-            Graph[i][j] = (ch=='*' ? -1:0);
+            Data[idx].Graph[i][j] = (ch=='*' ? -1:0);
         }
     }
+}
+
+void solve(int idx){
+    int n=Data[idx].n , m=Data[idx].m ;
+    pii Start=Data[idx].Start , End=Data[idx].End;
+
+    vector< vector< int > > Graph = Data[idx].Graph;
 
     Graph[ Start.X ][ Start.Y ] = 1;
     queue<pii> q;
@@ -58,8 +72,14 @@ int main(){
     int t;
     cin>>t;
 
-    while( t-- ){
-        solve();
+    Data.resize(t);
+
+    for(int i=0;i<t;i++){
+        Input(i);
+    }
+
+    for(int i=0;i<t;i++){
+        solve(i);
     }
 
     return 0;
