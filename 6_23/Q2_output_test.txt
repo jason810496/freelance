@@ -1,0 +1,80 @@
+sort array: 4 26 40 51 57 77 82 119 127 158 165 178 180 202 205 211 244 267 276 280 289 338 410 423 434 453 459 498 514 515 530 544 552 571 574 652 664 666 686 697 712 737 760 796 817 821 852 856 866 874 882 894 898 928 934 939 958 958 968 972 995
+target: 105
+middle is 30, because 530 > 105, right is 29
+middle is 14, because 205 > 105, right is 13
+middle is 6, because 82 < 105, left is 7
+middle is 10, because 165 > 105, right is 9
+middle is 8, because 127 > 105, right is 7
+middle is 7, because 119 > 105, right is 6
+
+sort array: 0 0 8 31 33 38 57 107 117 156 189 217 228 237 255 267 297 318 328 336 354 374 387 399 418 429 431 439 441 468 476 512 516 522 523 538 539 541 552 569 578 584 655 657 722 731 873 888 889 921 923 943 951 987 998 999
+target: 923
+middle is 27, because 439 < 923, left is 28
+middle is 41, because 584 < 923, left is 42
+middle is 48, because 889 < 923, left is 49
+middle is 52, because 951 > 923, right is 51
+middle is 50, get answer in 50
+
+sort array: 13 26 28 87 116 120 132 136 138 138 155 221 226 258 270 279 295 321 325 353 382 383 432 508 514 556 560 587 617 649 651 652 691 717 726 782 792 793 797 814 920
+target: 132
+middle is 20, because 382 > 132, right is 19
+middle is 9, because 138 > 132, right is 8
+middle is 4, because 116 < 132, left is 5
+middle is 6, get answer in 6
+
+sort array: 29 58 73 78 89 97 124 144 154 172 172 186 189 279 280 297 313 384 457 476 480 484 495 503 519 524 530 562 589 597 628 663 675 677 717 724 733 791 792 800 802 816 843 955
+target: 560
+middle is 21, because 484 < 560, left is 22
+middle is 32, because 675 > 560, right is 31
+middle is 26, because 530 < 560, left is 27
+middle is 29, because 597 > 560, right is 28
+middle is 27, because 562 > 560, right is 26
+
+sort array: 5 20 52 74 94 115 116 134 135 141 158 159 184 190 208 209 269 283 285 293 298 328 330 331 334 352 361 364 380 389 391 401 402 405 406 409 411 418 424 425 426 429 518 523 525 526 529 539 543 545 549 551 562 564 583 606 621 622 624 630 652 672 673 680 686 689 697 702 703 706 718 741 746 754 761 765 769 778 784 785 810 820 821 831 840 846 848 858 863 866 874 882 939 939 949 973 989 990 991 992
+target: 52
+middle is 49, because 545 > 52, right is 48
+middle is 24, because 334 > 52, right is 23
+middle is 11, because 159 > 52, right is 10
+middle is 5, because 115 > 52, right is 4
+middle is 2, get answer in 2
+
+sort array: 140 235 261 261 354 501 509 578 604 707 751 774 862 942
+target: 235
+middle is 6, because 509 > 235, right is 5
+middle is 2, because 261 > 235, right is 1
+middle is 0, because 140 < 235, left is 1
+middle is 1, get answer in 1
+
+sort array: 59 356 364 552 558 681 740 769 777 886 886 940 941
+target: 552
+middle is 6, because 740 > 552, right is 5
+middle is 2, because 364 < 552, left is 3
+middle is 4, because 558 > 552, right is 3
+middle is 3, get answer in 3
+
+sort array: 31 74 135 303 310 337 423 433 446 528 544 579 583 583 658 667 680 681 694 730 737 799 844 924 929 947
+target: 799
+middle is 12, because 583 < 799, left is 13
+middle is 19, because 730 < 799, left is 20
+middle is 22, because 844 > 799, right is 21
+middle is 20, because 737 < 799, left is 21
+middle is 21, get answer in 21
+
+sort array: 43 49 58 79 80 83 91 118 134 146 175 176 179 188 190 194 195 206 214 226 230 231 241 253 257 287 288 298 307 335 351 353 355 356 377 390 405 412 429 454 472 492 497 509 524 530 540 546 570 573 574 575 584 614 619 621 631 636 637 646 677 682 706 715 724 735 737 777 778 787 827 864 875 919 923 939 945 948 979 992 993 993
+target: 62
+middle is 40, because 472 > 62, right is 39
+middle is 19, because 226 > 62, right is 18
+middle is 9, because 146 > 62, right is 8
+middle is 4, because 80 > 62, right is 3
+middle is 1, because 49 < 62, left is 2
+middle is 2, because 58 < 62, left is 3
+middle is 3, because 79 > 62, right is 2
+
+sort array: 51 74 95 110 139 188 195 222 228 234 237 255 332 350 363 364 384 421 422 423 435 448 456 482 496 506 509 561 566 567 573 598 650 664 665 668 692 706 723 725 727 747 747 752 779 792 848 866 873 876 960 968
+target: 421
+middle is 25, because 506 > 421, right is 24
+middle is 12, because 332 < 421, left is 13
+middle is 18, because 422 > 421, right is 17
+middle is 15, because 364 < 421, left is 16
+middle is 16, because 384 < 421, left is 17
+middle is 17, get answer in 17
