@@ -20,14 +20,22 @@ void Input(int idx){
     cin>>Data[idx].n>>Data[idx].m;
     cin>>Data[idx].Start.X>>Data[idx].Start.Y>>Data[idx].End.X>>Data[idx].End.Y;
 
-    Data[idx].Graph.resize(Data[idx].n+1 , vector<int>(Data[idx].m+1) );
+    Data[idx].Graph.resize(Data[idx].n+1 , vector<int>(Data[idx].m+1 , 0) );
 
     for(int i=1;i<=Data[idx].n;i++){
         for(int j=1;j<=Data[idx].m;j++){
             char ch;
             cin>>ch;
-            
-            Data[idx].Graph[i][j] = (ch=='*' ? -1:0);
+            if( ch=='*') Data[idx].Graph[i][j] = -1;
+            else{
+                Data[idx].Graph[i][j] = 0;
+                if( ch=='s'){
+                    Data[idx].Start = {i,j};
+                }
+                else if( ch=='e'){
+                    Data[idx].End = {i,j};
+                }
+            }
         }
     }
 }
@@ -46,9 +54,9 @@ void solve(int idx){
         pii cur = q.front();
         q.pop();
 
-        if( cur.X==End.X && cur.Y == End.Y ){
-            cout<<"Yes "<<Graph[cur.X][cur.Y]-1<<"\n";
-            return ;
+        if( cur == End ){
+            cout<<"Yes "<<Graph[End.first][End.second]-1<<"\n";
+            return;
         }
 
         for(auto &v : Move){
@@ -64,6 +72,7 @@ void solve(int idx){
     }
 
     cout<<"No\n";
+    return ;
 }
 
 int main(){
