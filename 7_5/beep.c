@@ -1,6 +1,5 @@
 #include <stdio.h> 
-// #include <windows.h> 
-// #include<beep.c>
+#include <windows.h> 
 #include<unistd.h>
 
 #define DO 523
