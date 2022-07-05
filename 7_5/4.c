@@ -39,12 +39,49 @@ void Q4(){
     }
     else printf("common year\n");
 }
+
+
+int cmp(const void *a , const void *b){
+    return *(int*)a-*(int*)b;
+}
+void Q5(){
+    int arr[3];
+    printf("Q5:\ninput: ");
+    for(int i=0;i<3;i++){
+        printf("input %d side :\n" , i+1 );
+        scanf("%d" , &arr[i] );
+    }
+    printf("output:\n");
+    
+    qsort(arr,3,sizeof(int) , cmp);
+
+    if( arr[0]+arr[1] > arr[2] ) printf("valid\n");
+    else printf("not valid\n");
+}
+
+void Q6(){
+    printf("Q6:\ninput: ");
+    float ht , wt;
+    printf("input height(M): ");
+    scanf("%f" , &ht );
+    printf("input weight(Kg): ");
+    scanf("%f" , &wt );
+    printf("output:\n");
+
+    float BMI =  wt/(ht*ht) ;
+    printf("BMI : %.2f" ,BMI ) ;
+    
+    if( BMI < 18.5 ) printf("underweight\n");
+    else if( BMI<24 ) printf("normal\n");
+    else printf("overweight\n");
+}
 int main(){
     
-    Q1();
-    Q2();
-    Q3();
-    Q4();
+    // Q1();
+    // Q2();
+    // Q3();
+    // Q4();
+    Q5();
 
     return 0;
 }

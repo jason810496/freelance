@@ -12,9 +12,11 @@ int main(){
 
   printf("press 1 to beep , q to quit\n");
   while((c=getchar())!= 'q') {
-    // printf("%c\n" , c);
-    if( c=='1' ){
-        Beep(DO , 500);
+
+    switch (c){
+        case '1':
+            Beep( DO , 500);
+            break;
     }
   }
 
