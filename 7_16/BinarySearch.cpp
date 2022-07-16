@@ -6,8 +6,8 @@ using namespace std;
 #define ll long long
 
 
-int JumpBinarySearch( vector<int> &arr, int n,int target){
-	int pos=0;
+int JumpBinarySearch( vector<int> &arr,int target){
+	int pos=0 , n= arr.size() ;
 	if( arr[ pos ] >= target ) return pos ;
 
 	for(int jump = n/2 ; jump ; jump>>=1 ){
@@ -17,6 +17,32 @@ int JumpBinarySearch( vector<int> &arr, int n,int target){
 	}
 
 	return pos+1;
+}
+
+int Inclusive( vector<int> &arr , int target ){
+	int L=0 , R = arr.size()-1;
+
+	while( L<=R ){
+		int mid = (L+R)/2;
+		if( arr[mid]>target ) R = mid-1;
+		else L = mid+1;
+	}
+
+	return L;
+}
+
+int Exclusive(  vector<int> &arr,int target ){
+	int L=0 , R=arr.size();
+
+	while( L<R ){
+		int mid = (L+R)/2;
+		if( arr[mid] > target ){
+			R = mid;
+		}
+		else L = mid+1;
+	}
+
+	return L;
 }
 
 inline bool cmp(const int &a , const int &b){
@@ -45,21 +71,13 @@ int main(){
 	// our Binary search 
 
 	// [ L ,R ] inclusive L , inclusive R 
-	int L=1 , R=10 , target = 100 ;
+	Inclusive( vec , 100 );
 
-	while( L<=R ){
-		int mid  = (L+R)/2;
-
-		if( vec[mid]> target ){
-			R = mid-1;
-		}
-		else L = mid+1 ;
-	}
-
+	// [ L ,R ) inclusive L , exclusive R
+	Exclusive( vec , 100 );
 
 	// jump Binary Search 
-
-	JumpBinarySearch( vec , vec.size() , 100 );
+	JumpBinarySearch( vec , 100 );
 
 	return 0;
 }
