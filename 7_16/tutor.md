@@ -128,6 +128,14 @@ Eg :
 	array:		1 4 8  2  9  10 3 
 
 difference : 	1 3 4 -6  7  1  -7 
+
+array2:		    1 7 11 5  12  13 6
+
+difference2 : 	1 6 4 -6  7  1  -7 
+                            -span  
+line : [ L , R ]                
+span = 3                       
+idx :             L       R (R+1)
 ```
 
 
@@ -176,5 +184,12 @@ difference : 	1 3 4 -6  7  1  -7
 [2021/04 TOI練習賽 遊戲升等 ](https://zerojudge.tw/ShowProblem?problemid=f815)
 
 [2021/04 TOI練習賽 Youtube頻道 ](https://zerojudge.tw/ShowProblem?problemid=f816)
+
+
+2022	6	3	雷射測試	Link	二分搜、模擬
+2022	6	4	內積	Link	DP
+2021	11	2	動線安排	Link	模擬、陣列
+2021	11	3	生產線	Link	陣列、排序、差分
+2021	11	4	真假子圖	Link	DFS、二分搜
 
 

@@ -5,8 +5,30 @@ using namespace std;
 #define S second
 #define ll long long
 
-inline bool cmp(const int &a,const int &b){
+
+
+int arr[100];
+
+// bool cmp(const int &a,const int &b){
+// 	return a>b;
+// }
+
+bool cmp(int a, int b){
 	return a>b;
+}
+
+struct point{
+	int x, y;
+};
+
+bool cmp_point(point a ,point b){
+	return a.x < b.x;
+}
+
+
+void demo(){
+	// compare function : 
+	sort( arr, arr+100, cmp );
 }
 
 int main(){
@@ -20,10 +42,6 @@ int main(){
 	// decreasing : 
 
 	sort( vec.begin() , vec.end() , greater<int>() );
-
-	// compare function : 
-
-	sort( vec.begin() , vec.end() , cmp );
 
 	// compare lambda : 
 
