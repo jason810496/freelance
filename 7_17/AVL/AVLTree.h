@@ -89,7 +89,16 @@ template<class T, class S> void AVLTree<T,S>::rightRotate(AVLTreeNode<T,S>* node
 
 }
 template<class T,class S> void AVLTree<T,S>::updateTreeBalance(AVLTreeNode<T,S> *node){
+  int key = getKey( node );
+  if( key > 1 ){
 
+    if( getKey(node->left) ==1 ){
+      return rightRotate( node );
+    }
+    else {
+      node->left = 
+    }
+  }
 }
 
 template<class T,class S> void AVLTree<T,S>::updateHeight(AVLTreeNode<T,S> *node){
