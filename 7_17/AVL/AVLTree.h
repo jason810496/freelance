@@ -56,8 +56,16 @@ private:
 	// Tree attributes go here
 	// Your tree MUST have a root node named root
   // helper function recomended 
-  AVLTree<T,S>* insert(T key1, S value1, AVLTreeNode<T,S> *node , bool &flag);
-  AVLTree<T,S>* remove(T key1, AVLTreeNode<T,S> *node , bool &flag );
+  AVLTreeNode<T,S>* insert(T key1, S value1, AVLTreeNode<T,S> *node , bool &flag);
+  AVLTreeNode<T,S>* remove(T key1, AVLTreeNode<T,S> *node , bool &flag );
+
+  AVLTreeNode<T,S>* CopyTree(AVLTreeNode<T,S>* orig);
+  void buildKeys(vector<T> &keys , AVLTreeNode<T,S> *node);
+  void buildValues(vector<S> &values , AVLTreeNode<T,S> *node);
+
+  void deleteTree(AVLTreeNode<T,S> *node);
+  void DFS(AVLTreeNode<T,S> *node);
+
 public:
   AVLTree();
   AVLTree(const AVLTree &other);
@@ -68,15 +76,17 @@ public:
   S search(T key1);
   vector<S> values();
   vector<T> keys();
-  unsigned int size();
+  inline unsigned int size(){ return Size; };
 	void* getRoot() const { return root; }; // DO NOT REMOVE
+  void inorder();
 };
 
 // AVL Tree Methods go here
 
 
 // private 
-template<class T, class S> AVLTreeNode<T,S>* AVLTree<T,S>::leftRotate(AVLTreeNode<T,S>* node){
+template<class T, class S> 
+AVLTreeNode<T,S>* AVLTree<T,S>::leftRotate(AVLTreeNode<T,S>* node){
   AVLTreeNode<T,S> *rightChild = node->right;
   AVLTreeNode<T,S> *temp = ( rightChild ? rightChild->left : nullptr );
 
@@ -89,7 +99,8 @@ template<class T, class S> AVLTreeNode<T,S>* AVLTree<T,S>::leftRotate(AVLTreeNod
   return rightChild;
 }
 
-template<class T, class S> AVLTreeNode<T,S>* AVLTree<T,S>::rightRotate(AVLTreeNode<T,S>* node){
+template<class T, class S> 
+AVLTreeNode<T,S>* AVLTree<T,S>::rightRotate(AVLTreeNode<T,S>* node){
   AVLTreeNode<T,S> *leftChild = node->left;
   AVLTreeNode<T,S> *temp = ( leftChild ? leftChild->right: nullptr);
 
@@ -101,7 +112,8 @@ template<class T, class S> AVLTreeNode<T,S>* AVLTree<T,S>::rightRotate(AVLTreeNo
 
   return leftChild;
 }
-template<class T,class S> AVLTreeNode<T,S>* AVLTree<T,S>::updateTreeBalance(AVLTreeNode<T,S> *node){
+template<class T,class S> 
+AVLTreeNode<T,S>* AVLTree<T,S>::updateTreeBalance(AVLTreeNode<T,S> *node){
   int factor = getFactor( node );
   if( factor > 1 ){
 
@@ -127,45 +139,76 @@ template<class T,class S> AVLTreeNode<T,S>* AVLTree<T,S>::updateTreeBalance(AVLT
   return node;
 }
 
-template<class T,class S> AVLTreeNode<T,S>* AVLTree<T,S>::maxValueNode(AVLTreeNode<T,S> *node){
+template<class T,class S> 
+AVLTreeNode<T,S>* AVLTree<T,S>::maxValueNode(AVLTreeNode<T,S> *node){
   if( !node ) return nullptr;
   if( node->right ) return maxValueNode( node->right );
   return node;
 }
 
-template<class T,class S> void AVLTree<T,S>::updateHeight(AVLTreeNode<T,S> *node){
+template<class T,class S> 
+void AVLTree<T,S>::updateHeight(AVLTreeNode<T,S> *node){
   if( !node ) return;
-
   node->height = max( getHeight(node->left) , getHeight(node->right) )+1;
 }
 
 // public 
-template<class T, class S> AVLTree<T,S>::AVLTree(){
+template<class T, class S>
+AVLTree<T,S>::AVLTree(){
   root = nullptr;
   Size = 0;
 }
 
-template<class T, class S> AVLTree<T,S>::AVLTree(const AVLTree &other){
-  
+template<class T, class S>
+AVLTree<T,S>::AVLTree(const AVLTree<T,S> &other){
+  if( root!=other.root ){
+    root = CopyTree( other.root );
+    Size = other.Size;
+  }
+}
+
+template<class T, class S>
+AVLTree<T,S> &AVLTree<T,S>::operator=(const AVLTree<T,S> &other){
+  if( root!=other.root ){
+    root=CopyTree( other.root );
+    Size = other.Size;
+  }
+  return *this;
+}
+
+template<class T,class S>
+void AVLTree<T,S>::deleteTree(AVLTreeNode<T,S> *node){
+  if( node ){
+    deleteTree( node->left );
+    deleteTree( node->right );
+    delete node;
+  }
+}
+
+template<class T,class S>
+AVLTree<T,S>::~AVLTree(){
+  deleteTree( root );
 }
 
 
-template<class T, class S>bool AVLTree<T,S>::insert(T key1, S value1){
+template<class T, class S>
+bool AVLTree<T,S>::insert(T key1, S value1){
   if( !getRoot() ){
-    root = new AVLTreeNode( key1 , value1);
+    root = new AVLTreeNode<T,S>( key1 , value1);
     return true;
   }
   else{
     bool flag = false;
-    root = insert(  key1 , value1 , getRoot()  ,flag );
+    root = insert(  key1 , value1 , root  ,flag );
     return flag;
   }
 }
 
-template<class T, class S>AVLTree<T,S>* AVLTree<T,S>::insert(T key1 ,S value1, AVLTreeNode<T,S> *node,bool &flag){
+template<class T, class S>
+AVLTreeNode<T,S>* AVLTree<T,S>::insert(T key1 ,S value1, AVLTreeNode<T,S> *node,bool &flag){
   if( !node ){
     flag = true;
-    return new AVLTreeNode( value1 );
+    return new AVLTreeNode<T,S>( key1 ,value1 );
   }
 
   if( node->key < key1 ){
@@ -183,19 +226,22 @@ template<class T, class S>AVLTree<T,S>* AVLTree<T,S>::insert(T key1 ,S value1, A
   updateHeight( node );
   node = updateTreeBalance( node );
 
-  flag = true;
   return node;
 }
 
-template<class T, class S>bool AVLTree<T,S>::remove(T key1){
+template<class T, class S>
+bool AVLTree<T,S>::remove(T key1){
   if( !getRoot() ){
     return false;
   }
 
   bool flag = false;
-  root=remove( key , root , flag );
+  root=remove( key1 , root , flag );
+
+  return flag;
 }
-template<class T, class S>AVLTree<T,S>* AVLTree<T,S>::remove(T key1, AVLTreeNode<T,S> *node , bool &flag ){
+template<class T, class S>
+AVLTreeNode<T,S>* AVLTree<T,S>::remove(T key1, AVLTreeNode<T,S> *node , bool &flag ){
   if( !node ){
     return nullptr;
   }
@@ -223,7 +269,7 @@ template<class T, class S>AVLTree<T,S>* AVLTree<T,S>::remove(T key1, AVLTreeNode
       leftMax->value = temp->value;
       leftMax->key = temp->key;
 
-      node-> left = remove( key1 , node->left );
+      node-> left = remove( key1 , node->left  , flag );
     }
 
     updateHeight( node );
@@ -231,7 +277,8 @@ template<class T, class S>AVLTree<T,S>* AVLTree<T,S>::remove(T key1, AVLTreeNode
   }
 }
 
-template<class T, class S>S AVLTree<T,S>::search(T key1){
+template<class T, class S>
+S AVLTree<T,S>::search(T key1){
   AVLTreeNode<T,S>* cur=root;
   while(cur!=NULL){
     if(key1==cur->key){
@@ -247,6 +294,59 @@ template<class T, class S>S AVLTree<T,S>::search(T key1){
   throw runtime_error("key is not found");
 }
 
-template<class T, class S>unsigned int AVLTree<T,S>::size(){
-  return Size;
+template<class T,class S>
+AVLTreeNode<T,S>* AVLTree<T,S>::CopyTree(AVLTreeNode<T,S> *orig){
+  if( ! orig ) return nullptr;
+
+  AVLTreeNode<T,S> *node = new AVLTreeNode<T,S>( orig->key , orig->value );
+  node->height = orig->height;
+  node->left = CopyTree( orig->left );
+  node->right= CopyTree( orig->right );
+  return node;
 }
+
+
+template<class T,class S>
+vector<T> AVLTree<T,S>::keys(){
+  vector<T> result;
+  buildKeys( result , root );
+  return result;
+}
+template<class T,class S>
+void AVLTree<T,S>::buildKeys( vector<T> &keys , AVLTreeNode<T,S> *node){
+  if( node ){
+    buildKeys( keys , node->left );
+    keys.push_back( node->key );
+    buildKeys( keys , node->right);
+  }
+}
+
+template<class T,class S>
+vector<S> AVLTree<T,S>::values(){
+  vector<S> result;
+  buildValues( result , root );
+  return result;
+}
+template<class T,class S>
+void AVLTree<T,S>::buildValues( vector<S> &values, AVLTreeNode<T,S> *node){
+  if( node ){
+    buildKeys( values , node->left );
+    values.push_back( node->value );
+    buildKeys( values , node->right);
+  }
+}
+
+template<class T,class S>
+void AVLTree<T,S>::inorder(){
+  DFS( root );
+  cout<<"\n";
+}
+
+template<class T , class S>
+void AVLTree<T,S>::DFS(AVLTreeNode<T,S> *node){
+  if( !node ) return;
+  DFS( node->left );
+  cout<<" ( "<<node->key<<" , "<<node->value<<" ) ";
+  DFS( node->right);
+}
+
