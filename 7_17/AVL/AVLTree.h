@@ -46,26 +46,26 @@ class AVLTree
 private:
   AVLTreeNode<T,S>*root;
   unsigned int Size;
-  void leftRotate(AVLTreeNode<T,S>* node);
-  void rightRotate(AVLTreeNode<T,S>* node);
-  void updateTreeBalance(AVLTreeNode<T,S> *node);
+  AVLTreeNode<T,S>* leftRotate(AVLTreeNode<T,S>* node);
+  AVLTreeNode<T,S>* rightRotate(AVLTreeNode<T,S>* node);
+  AVLTreeNode<T,S>* updateTreeBalance(AVLTreeNode<T,S> *node);
+  AVLTreeNode<T,S>* maxValueNode(AVLTreeNode<T,S>* node);
   void updateHeight(AVLTreeNode<T,S> *node);
   inline int getHeight(AVLTreeNode<T,S> *node ){ return (node ? node->height: -1 ); }
-  inline int getKey(AVLTreeNode<T,S> *node){ return (node ? getHeight(node->left)-getHeight(node->right):0); }
+  inline int getFactor(AVLTreeNode<T,S> *node){ return (node ? getHeight(node->left)-getHeight(node->right):0); }
 	// Tree attributes go here
 	// Your tree MUST have a root node named root
   // helper function recomended 
-  S search(S val , AVLTreeNode<T,S> *node);
-  bool insert(S val , AVLTreeNode<T,S> *node);
-  bool remove(S val , AVLTreeNode<T,S> *node);
+  AVLTree<T,S>* insert(T key1, S value1, AVLTreeNode<T,S> *node , bool &flag);
+  AVLTree<T,S>* remove(T key1, AVLTreeNode<T,S> *node , bool &flag );
 public:
   AVLTree();
   AVLTree(const AVLTree &other);
 	AVLTree &operator=(const AVLTree &other);
   ~AVLTree();
-  bool insert(S val);
-  bool remove(S val);
-  S search(S val);
+  bool insert(T key1, S value1);
+  bool remove(T key1);
+  S search(T key1);
   vector<S> values();
   vector<T> keys();
   unsigned int size();
@@ -76,29 +76,61 @@ public:
 
 
 // private 
-template<class T, class S> void AVLTree<T,S>::leftRotate(AVLTreeNode<T,S>* node){
+template<class T, class S> AVLTreeNode<T,S>* AVLTree<T,S>::leftRotate(AVLTreeNode<T,S>* node){
+  AVLTreeNode<T,S> *rightChild = node->right;
+  AVLTreeNode<T,S> *temp = ( rightChild ? rightChild->left : nullptr );
 
+  node->right = temp;
+  rightChild->left = node;
+
+  updateHeight( node );
+  updateHeight( rightChild );
+
+  return rightChild;
 }
 
-template<class T, class S> void AVLTree<T,S>::rightRotate(AVLTreeNode<T,S>* node){
-  AVLTreeNode<T,S> leftChild = node->left;
-  AVLTreeNode<T,S> temp = node->right;
+template<class T, class S> AVLTreeNode<T,S>* AVLTree<T,S>::rightRotate(AVLTreeNode<T,S>* node){
+  AVLTreeNode<T,S> *leftChild = node->left;
+  AVLTreeNode<T,S> *temp = ( leftChild ? leftChild->right: nullptr);
 
   node->left = temp;
   leftChild->right = node;
 
-}
-template<class T,class S> void AVLTree<T,S>::updateTreeBalance(AVLTreeNode<T,S> *node){
-  int key = getKey( node );
-  if( key > 1 ){
+  updateHeight( node );
+  updateHeight(leftChild);
 
-    if( getKey(node->left) ==1 ){
+  return leftChild;
+}
+template<class T,class S> AVLTreeNode<T,S>* AVLTree<T,S>::updateTreeBalance(AVLTreeNode<T,S> *node){
+  int factor = getFactor( node );
+  if( factor > 1 ){
+
+    if( getFactor(node->left) == 1 ){ // LL case
       return rightRotate( node );
     }
-    else {
-      node->left = 
+    else {  // LR case
+      node->left = leftRotate( node->left );
+      return rightRotate( node );
     }
   }
+  else if( factor < -1 ){
+
+    if( getFactor(node->right) == -1 ){ // RR case
+      return leftRotate( node );
+    }
+    else{
+      node->right = rightRotate( node->right );
+      return leftRotate( node );
+    }
+  }
+
+  return node;
+}
+
+template<class T,class S> AVLTreeNode<T,S>* AVLTree<T,S>::maxValueNode(AVLTreeNode<T,S> *node){
+  if( !node ) return nullptr;
+  if( node->right ) return maxValueNode( node->right );
+  return node;
 }
 
 template<class T,class S> void AVLTree<T,S>::updateHeight(AVLTreeNode<T,S> *node){
@@ -118,49 +150,102 @@ template<class T, class S> AVLTree<T,S>::AVLTree(const AVLTree &other){
 }
 
 
-template<class T, class S>bool AVLTree<T,S>::insert(S val){
-  if( !root ) root = new AVLTreeNode( 0 , val );
+template<class T, class S>bool AVLTree<T,S>::insert(T key1, S value1){
+  if( !getRoot() ){
+    root = new AVLTreeNode( key1 , value1);
+    return true;
+  }
   else{
-    root = insert( val , getRoot() );
+    bool flag = false;
+    root = insert(  key1 , value1 , getRoot()  ,flag );
+    return flag;
   }
 }
 
-template<class T, class S>bool AVLTree<T,S>::insert(S val , AVLTreeNode<T,S> *node){
+template<class T, class S>AVLTree<T,S>* AVLTree<T,S>::insert(T key1 ,S value1, AVLTreeNode<T,S> *node,bool &flag){
   if( !node ){
-    return new AVLTreeNode(val);
+    flag = true;
+    return new AVLTreeNode( value1 );
   }
 
-  if( node->value < val ){
-    node->riht = insert( val , node->right );
+  if( node->key < key1 ){
+    node->right = insert( key1 , value1 , node->right , flag );
+  }
+  else if( node->key > key1 ){
+    node->left = insert( key1 , value1 , node->left  , flag );
+  }
+  else{ // same key
+    flag = false;
+    return node;
+  }
+
+
+  updateHeight( node );
+  node = updateTreeBalance( node );
+
+  flag = true;
+  return node;
+}
+
+template<class T, class S>bool AVLTree<T,S>::remove(T key1){
+  if( !getRoot() ){
+    return false;
+  }
+
+  bool flag = false;
+  root=remove( key , root , flag );
+}
+template<class T, class S>AVLTree<T,S>* AVLTree<T,S>::remove(T key1, AVLTreeNode<T,S> *node , bool &flag ){
+  if( !node ){
+    return nullptr;
+  }
+
+  if( node->key > key1 ){
+    node->left = remove(key1,node->left,flag);
+  }
+  else if( node->key < key1 ){
+    node->right = remove(key1,node->right,flag);
   }
   else{
-    node->left = insert( val , node->left );
+    flag = true;
+
+    if( !node->left && !node->right ) return nullptr;
+    else if( ! node->left ) return node->right;
+    else if( !node->right ) return node->left;
+    else{
+      AVLTreeNode<T,S> *leftMax = maxValueNode( node->left );
+
+      AVLTreeNode<T,S> *temp = node;
+      // swap data
+      node->value = leftMax->value;
+      node->key = leftMax->value;
+
+      leftMax->value = temp->value;
+      leftMax->key = temp->key;
+
+      node-> left = remove( key1 , node->left );
+    }
+
+    updateHeight( node );
+    return updateTreeBalance( node );
   }
-
 }
 
-template<class T, class S>bool AVLTree<T,S>::remove(S val){
-
-}
-
-template<class T, class S>S AVLTree<T,S>::search(S val){
-  if( !getRoot() ) return nullptr;
-
-  return search(val , getRoot() );
-}
-template<class T,class S>S AVLTree<T,S>::search(S val , AVLTreeNode<T,S> *node){
-  if( !node ) return nullptr;
-
-  if( node->value < val ){
-    return search( val , node->right );
+template<class T, class S>S AVLTree<T,S>::search(T key1){
+  AVLTreeNode<T,S>* cur=root;
+  while(cur!=NULL){
+    if(key1==cur->key){
+      return cur->value;
+    }
+    if(key1<cur->key){
+      cur=cur->left;
+    }
+    else{
+      cur=cur->right;
+    }
   }
-  else if( node->value > val ){
-    return serach( val , node->left );
-  }
-  else return node;
+  throw runtime_error("key is not found");
 }
-
-
 
 template<class T, class S>unsigned int AVLTree<T,S>::size(){
   return Size;
