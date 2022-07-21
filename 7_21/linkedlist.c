@@ -121,6 +121,25 @@ int P4_is_palindrome(LinkedList *list){
    return 1;
 }
 
+void P5(LinkedList *list){
+    Node *temp = list->head , *even=NULL;
+    // delete odd 
+
+    while( temp->next ){
+        if( temp->next->data&1 ){
+            even = temp->next->next;
+
+            while( even && even->data&1 ){
+                even = even->next;
+            }
+            temp->next = even;
+        }
+        temp = temp->next;
+    }
+
+    reverse(list);
+}
+
 void printList(LinkedList *list ){
     Node *temp = list->head ; 
     printf("[ ");
@@ -174,10 +193,10 @@ int main(){
     // printList(&list);
 
 
-    int arr[8] = {1,3,2,1,5};
+    int arr[8] = {78 , 56 , 47 ,13 ,12 ,4};
     LinkedList list;
     Init(&list);
-    for(int i=0;i<7;i++){
+    for(int i=0;i<6;i++){
         push_back( &list ,  arr[i] );
     }
 
@@ -185,8 +204,11 @@ int main(){
     // P3_even_and_odd(&list);
     // printList(&list);
 
-    int res = P4_is_palindrome(&list);
-    printf( "%d \n" , res );
+    // int res = P4_is_palindrome(&list);
+    // printf( "%d \n" , res );
+
+    P5(&list);
+    printList(&list);
 
     return 0;
 }
