@@ -64,6 +64,30 @@ void delete(LinkedList *list , int value ){
     temp->next = temp->next->next;
 }
 
+void reverse(LinkedList *list ){
+    Node *pre=NULL ,  *nxt=NULL , *cur=list->head;
+    
+    while( cur ){
+        nxt = cur->next;
+        cur->next = pre;
+        pre = cur;
+        cur = nxt;
+    }
+
+    list->head = pre;
+}
+
+void printList(LinkedList *list ){
+    Node *temp = list->head ; 
+    printf("[ ");
+    while( temp ){
+        printf("%d" , temp->data );
+        temp = temp->next ;
+        if( temp ) printf(" , ");
+    }
+    printf(" ]\n");
+}
+
 int main(){
 
     LinkedList list;
@@ -76,7 +100,7 @@ int main(){
     }
 
     for(int i=0;i<10;i++){
-        push_front(&list,i);
+        push_front(&list,-i);
     }
 
     Node *temp = list.head;
@@ -97,11 +121,13 @@ int main(){
 
     delete(&list,6);
 
-    temp = list.head;
-    while( temp ){
-        printf( "%d " ,temp->data  );
-        temp = temp->next ;
-    }
+    printList(&list);
+
+    push_front(&list , 100 );
+
+    reverse(&list);
+
+    printList(&list);
 
     return 0;
 }
