@@ -26,8 +26,7 @@ void Init(LinkedList *list){
     list->size = 0;
 }
 
-void push_back(LinkedList *list,int value){
-
+void push_back(LinkedList *list,int value){;
     if( (*list).size==0 ){
         (*list).head = (*list).tail = newNode( value );
         (*list).size++;
@@ -77,6 +76,36 @@ void reverse(LinkedList *list ){
     list->head = pre;
 }
 
+void P3_even_and_odd(LinkedList *list){
+    LinkedList odd , even;
+    Init(&odd);
+    Init(&even);
+    Node *temp = list->head;
+
+    for(int flag=1 ; temp ; flag=!flag){
+        if( flag ){
+            push_back( &odd , temp->data );
+        }
+        else{
+            push_back( &even , temp->data );
+        }
+        temp = temp->next;
+    }
+
+    Init(list);
+
+    temp = odd.head;
+    while( temp ){
+        push_back( list, temp->data );
+        temp = temp->next;
+    }
+    temp = even.head;
+    while( temp ){
+        push_back( list , temp->data );
+        temp = temp->next;
+    }   
+}
+
 void printList(LinkedList *list ){
     Node *temp = list->head ; 
     printf("[ ");
@@ -90,43 +119,55 @@ void printList(LinkedList *list ){
 
 int main(){
 
+    // LinkedList list;
+    // Init(&list);
+    // // list.head->data = 1;
+    // // printf( "%d" , list.head->data );
+
+    // for(int i=0;i<10;i++){
+    //     push_back(&list , i );
+    // }
+
+    // for(int i=0;i<10;i++){
+    //     push_front(&list,-i);
+    // }
+
+    // Node *temp = list.head;
+
+    // while( temp ){
+    //     printf( "%d " ,temp->data  );
+    //     temp = temp->next ;
+    // }
+
+    // temp = list.tail;
+
+    // while( temp ){
+    //     printf( "%d " ,temp->data  );
+    //     temp = temp->next ;
+    // }
+
+    // printf("\n\n");
+
+    // delete(&list,6);
+
+    // printList(&list);
+
+    // push_front(&list , 100 );
+
+    // reverse(&list);
+
+    // printList(&list);
+
+
+    int arr[8] = {2,1,3,5,6,4,7};
     LinkedList list;
     Init(&list);
-    // list.head->data = 1;
-    // printf( "%d" , list.head->data );
-
-    for(int i=0;i<10;i++){
-        push_back(&list , i );
+    for(int i=0;i<7;i++){
+        push_back( &list ,  arr[i] );
     }
-
-    for(int i=0;i<10;i++){
-        push_front(&list,-i);
-    }
-
-    Node *temp = list.head;
-
-    while( temp ){
-        printf( "%d " ,temp->data  );
-        temp = temp->next ;
-    }
-
-    temp = list.tail;
-
-    while( temp ){
-        printf( "%d " ,temp->data  );
-        temp = temp->next ;
-    }
-
-    printf("\n\n");
-
-    delete(&list,6);
 
     printList(&list);
-
-    push_front(&list , 100 );
-
-    reverse(&list);
-
+    P3_even_and_odd(&list);
     printList(&list);
 
     return 0;
