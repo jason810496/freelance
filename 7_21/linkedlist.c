@@ -54,6 +54,16 @@ void push_front(LinkedList *list , int value ){
     list->head = temp ;
 }
 
+void delete(LinkedList *list , int value ){
+    Node *temp = list->head;
+
+    while( temp->next && temp->next->data != value){
+        temp = temp->next;
+    }
+
+    temp->next = temp->next->next;
+}
+
 int main(){
 
     LinkedList list;
@@ -82,5 +92,16 @@ int main(){
         printf( "%d " ,temp->data  );
         temp = temp->next ;
     }
+
+    printf("\n\n");
+
+    delete(&list,6);
+
+    temp = list.head;
+    while( temp ){
+        printf( "%d " ,temp->data  );
+        temp = temp->next ;
+    }
+
     return 0;
 }
