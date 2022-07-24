@@ -20,6 +20,8 @@ int main(){
 
     cout<<T.remove( 1 )<<"\n";
 
+    T.inorder();
+
     cout<<T.search( 2 )<<"\n";
 
     try
