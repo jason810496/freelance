@@ -12,7 +12,19 @@ void FindMax(int *data , int n ){
         }
     }
 
-    printf("最大值為 data[%d] = %d" , index , value );
+    printf("最大值為 data[%d] = %d\n" , index , value );
+}
+
+void FindRecursionMax(int *data ,int n ,int cur,int *index,int *value){
+    if( cur>=n ) return;
+
+    if( data[cur] > *value ){
+        *value = data[cur];
+        *index = cur; 
+    }
+
+    FindRecursionMax(data , n , cur+1 , index , value );
+    return;
 }
 
 int main(){
@@ -27,5 +39,9 @@ int main(){
     }
 
     FindMax( data , n );
+
+    int idx=0 , val=-1;
+    FindRecursionMax( data , n , 0 , &idx , &val );
+    printf("最大值為 data[%d] = %d\n" , idx , val );
     return 0;
 }
