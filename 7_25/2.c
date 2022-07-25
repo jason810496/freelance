@@ -3,11 +3,12 @@
 
 int main(){
     
-    int n=8 , m=8 , x,y;
+    int n=8 , m=8 , x , y ;
     int map[n][m];
 
     scanf("%d%d" , &x , &y);
 
+    // 初始化
     for(int i=0;i<n;i++){
         for(int j=0;j<m;j++){
             map[i][j]=0;
