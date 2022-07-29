@@ -43,6 +43,14 @@ void inorder(node *root){
     inorder( root->R );
 }
 
+void preorder(node *root){
+    if( !root || root->val == -1 ) return ;
+
+    printf("%d " , root->val );
+    preorder( root->L );
+    preorder( root->R ); 
+}
+
 int main(){
 
     int flag = 1 ;
@@ -51,7 +59,11 @@ int main(){
     build(&root); 
 
     printf("inorder traversal:\n");
-    inorder(root);   
-    
+    inorder(root); 
+
+    // P2 
+    printf("\npreorder traversal:\n");
+    preorder(root);
+
     return 0;
 }
