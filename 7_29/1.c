@@ -53,7 +53,6 @@ void preorder(node *root){
 
 int main(){
 
-    int flag = 1 ;
     node *root;
 
     build(&root); 
